@@ -1,0 +1,26 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "outDir": "dist",
+    "module": "commonjs",
+    "target": "es2015",
+    "sourceMap": true,
+    "forceConsistentCasingInFileNames": true,
+    "removeComments": true,
+    "pretty": true,
+    "experimentalDecorators": true,
+    "strict": true,
+    "baseUrl": "src",
+    "downlevelIteration": true,
+    "lib": [
+      "es2015.iterable",
+      "es2015",
+      "es2016.array.include"
+    ]
+  },
+  "exclude": [
+    "node_modules",
+    "typings/globals",
+    "typings/modules"
+  ]
+}
