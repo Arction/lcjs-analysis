@@ -8,6 +8,7 @@
     "build": "tsc"
   },
   "devDependencies": {
+    "eventer": "git@gitlab.com:arction/Eventer.git",
     "@types/chai": "^4.1.4",
     "@types/mocha": "^5.2.4",
     "@types/node": "^8.0.26",

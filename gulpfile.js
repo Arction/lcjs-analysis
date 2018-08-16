@@ -14,7 +14,6 @@ gulp
             .pipe(mocha({
                 "timeout": 100000,
                 require: 'ts-node/register',
-                color: true,
                 reporter: 'spec'
             }))
         done()
