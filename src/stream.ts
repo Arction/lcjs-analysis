@@ -3,7 +3,8 @@ import { Position } from './generators/progressiveRandom';
 export interface StreamOptions<T> {
     interval?: number,
     batchSize?: number,
-    scalingFunction?: ( val: T ) => T
+    scalingFunction?: ( val: T ) => T,
+    infinite?: boolean
 }
 
 export class Stream<T> {
@@ -22,9 +23,17 @@ export class Stream<T> {
                     } else if ( count < len ) {
                         end = len
                     } else {
-                        clearInterval( curInterval )
+                        if ( this.options.infinite === false ) {
+                            clearInterval( curInterval )
+                        } else {
+                            count = 0
+                            end = batchSize
+                        }
                     }
                     let vals = value.slice( count, end )
+                    if ( this.options.infinite !== false && vals.length < batchSize ) {
+                        vals = vals.concat( value.slice( 0, batchSize - vals.length ) )
+                    }
                     if ( this.options.scalingFunction ) {
                         vals = vals.map( this.options.scalingFunction )
                     }
@@ -40,7 +49,7 @@ export class Stream<T> {
 export const scalingFunctions = {
     minMax: ( min: number, max: number, property?: string ) => ( val: Position ) => {
         const interval = max - min
-        const scaled = val
+        const scaled = { ...val }
         if ( property === 'x' || property === 'y' ) {
             scaled[property] = val[property] * interval + min
         } else {

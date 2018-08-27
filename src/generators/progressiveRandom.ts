@@ -27,7 +27,7 @@ export class ProgressiveRandomDataGenerator extends DataGenerator<Position, Prog
             if ( i % randomStep === 0 )
                 random = Math.random()
             data.push( {
-                x: curStep - ( Math.random() % curStep ) / 2,
+                x: ( Math.random() + random ) / 2,
                 y: ( Math.random() + random ) / 2
             } )
             curStep += step
