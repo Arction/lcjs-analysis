@@ -1,2 +1,5 @@
 node_modules
 dist
+dev
+temp
+.rpt2_cache

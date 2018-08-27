@@ -2,8 +2,11 @@
 const gulp = require('gulp')
 const mocha = require('gulp-mocha')
 const tslint = require('gulp-tslint')
-const sourceMaps = require('gulp-sourcemaps')
-const tsProject = require('gulp-typescript').createProject('tsconfig.json')
+const rollup = require('rollup')
+const rollupTypescript = require('rollup-plugin-typescript2')
+const rollupNodeResolve = require('rollup-plugin-node-resolve')
+const rollupCommonjs = require('rollup-plugin-commonjs')
+const rollupSourceMaps = require('rollup-plugin-sourcemaps')
 const watch = (paths, tasks) => () => gulp.watch(paths, tasks)
 const allFiles = ['src/**/*.ts', 'test/**/*.ts']
 /**
@@ -40,10 +43,23 @@ gulp
 gulp
     .task('ci:watch', ['test', 'lint'], watch(allFiles, ['test', 'lint']))
     .task('build', () => {
-        gulp.src(['src/**/*.ts', 'src/*.ts'])
-            .pipe(sourceMaps.init())
-            .pipe(tsProject())
-            .pipe(sourceMaps.write(''))
-            .pipe(gulp.dest('dist'))
+        return rollup.rollup({
+            input: 'src/index.ts',
+            plugins: [
+                rollupTypescript({ typescript: require('typescript'), tsconfig: './tsconfig.json' }),
+                rollupCommonjs(),
+                rollupNodeResolve(),
+                rollupSourceMaps()
+            ]
+        })
+            .then(bundle => {
+                bundle.write({
+                    file: 'dist/xydata.js',
+                    format: 'umd',
+                    exports: 'named',
+                    sourcemap: true,
+                    name: 'xydata'
+                })
+            })
     })
     .task('build:watch', ['build'], watch(allFiles, ['build']))

@@ -1,4 +1,3 @@
-import Eventer from 'eventer'
 import { Position } from './generators/progressiveRandom';
 
 export interface StreamOptions<T> {

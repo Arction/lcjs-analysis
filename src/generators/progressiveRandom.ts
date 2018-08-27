@@ -5,18 +5,18 @@ export interface Position {
     y: number
 }
 
-export interface ProgessiveRandomDataGeneratorProps {
+export interface ProgressiveRandomDataGeneratorProps {
     numberOfPoints?: number,
     randomStep?: number,
     step?: number
 }
 
-export class ProgessiveRandomDataGenerator extends DataGenerator<Position, ProgessiveRandomDataGeneratorProps> {
-    constructor( args: ProgessiveRandomDataGeneratorProps ) {
+export class ProgressiveRandomDataGenerator extends DataGenerator<Position, ProgressiveRandomDataGeneratorProps> {
+    constructor( args: ProgressiveRandomDataGeneratorProps ) {
         super( args )
     }
 
-    generator( args: ProgessiveRandomDataGeneratorProps ) {
+    generator( args: ProgressiveRandomDataGeneratorProps ) {
         const data: Position[] = []
         const numberOfPoints = args.numberOfPoints || 10000
         const randomStep = args.randomStep || 250
