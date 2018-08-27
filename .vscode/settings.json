@@ -8,5 +8,6 @@
         "*.*~": true,
         "*.ts~": true,
         "*.un~": true
-    }
+    },
+    "typescript.tsdk": "node_modules\\typescript\\lib"
 }
