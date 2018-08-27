@@ -1,4 +1,4 @@
-import { Stream } from './stream'
+import { Stream, StreamOptions } from './stream'
 
 export abstract class DataGenerator<T, K> {
     protected readonly data: Promise<T[]>
@@ -7,49 +7,13 @@ export abstract class DataGenerator<T, K> {
         this.data = this.generator( args || {} )
     }
 
-    toStream() {
-        return new Stream<T>( this.data )
+    toStream( options?: StreamOptions<T> ): Stream<T> {
+        return new Stream<T>( this.data, options || {} )
     }
 
-    toPromise() {
+    toPromise(): Promise<T[]> {
         return this.data
     }
 
     abstract generator( args: K ): Promise<T[]>
-}
-
-export interface Position {
-    x: number,
-    y: number
-}
-
-export interface ProgessiveRandomDataGeneratorProps {
-    numberOfPoints?: number,
-    randomStep?: number,
-    step?: number
-}
-
-export class ProgessiveRandomDataGenerator extends DataGenerator<Position, ProgessiveRandomDataGeneratorProps> {
-    constructor( args: ProgessiveRandomDataGeneratorProps ) {
-        super( args )
-    }
-
-    generator( args: ProgessiveRandomDataGeneratorProps ) {
-        const data: Position[] = []
-        const numberOfPoints = args.numberOfPoints || 10000
-        const randomStep = args.randomStep || 250
-        const step = args.step || 1
-        let random = Math.random()
-        let curStep = step
-        for ( let i = 0; i < numberOfPoints; i++ ) {
-            if ( i % randomStep === 0 )
-                random = Math.random()
-            data.push( {
-                x: curStep - ( Math.random() % curStep ) / 2,
-                y: ( Math.random() + random ) / 2
-            } )
-            curStep += step
-        }
-        return Promise.resolve( data )
-    }
 }
