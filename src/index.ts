@@ -2,5 +2,6 @@
  * Controls what is exported
  */
 
-export { ProgressiveRandomDataGenerator } from './generators/progressiveRandom'
-export { Stream, scalingFunctions } from './stream'
+export { ProgressiveRandom } from './generators/progressiveRandom'
+export { ProgressiveTrace } from './generators/progressiveTrace'
+export { Stream } from './stream'

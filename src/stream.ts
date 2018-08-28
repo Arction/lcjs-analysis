@@ -1,10 +1,11 @@
-import { Position } from './generators/progressiveRandom';
+import { Point } from './data-generator'
 
 export interface StreamOptions<T> {
     interval?: number,
     batchSize?: number,
     scalingFunction?: ( val: T ) => T,
-    infinite?: boolean
+    infinite?: boolean,
+    infiniteReset: ( values: T[], length: number ) => T[]
 }
 
 export class Stream<T> {
@@ -13,6 +14,7 @@ export class Stream<T> {
         const interval = this.options.interval || 1000
         const batchSize = this.options.batchSize || 1
         this.content.then( value => {
+            let values = value
             let count = 0
             const len = value.length
             const curInterval = setInterval(
@@ -28,34 +30,22 @@ export class Stream<T> {
                         } else {
                             count = 0
                             end = batchSize
+                            values = this.options.infiniteReset( values, values.length )
                         }
                     }
-                    let vals = value.slice( count, end )
+                    let vals = values.slice( count, end )
+                    count += batchSize
                     if ( this.options.infinite !== false && vals.length < batchSize ) {
-                        vals = vals.concat( value.slice( 0, batchSize - vals.length ) )
-                    }
-                    if ( this.options.scalingFunction ) {
-                        vals = vals.map( this.options.scalingFunction )
+                        const toEnd = batchSize - vals.length
+                        const tempVals = this.options.infiniteReset( values.slice( 0, toEnd ), values.length )
+                        vals = vals.concat( tempVals )
+                        values = this.options.infiniteReset( values, values.length )
+                        count = toEnd
                     }
                     if ( vals.length > 0 )
                         handler( vals )
-                    count += batchSize
                 }, interval
             )
         } )
-    }
-}
-
-export const scalingFunctions = {
-    minMax: ( min: number, max: number, property?: string ) => ( val: Position ) => {
-        const interval = max - min
-        const scaled = { ...val }
-        if ( property === 'x' || property === 'y' ) {
-            scaled[property] = val[property] * interval + min
-        } else {
-            scaled.x = val.x * interval + min
-            scaled.y = val.y * interval + min
-        }
-        return scaled
     }
 }
