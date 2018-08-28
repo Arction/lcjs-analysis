@@ -2,8 +2,10 @@ import { DataGenerator, Point } from '../data-generator'
 
 export interface ProgressiveRandomDataGeneratorProps {
     numberOfPoints?: number,
-    randomStep?: number,
-    step?: number
+    offsetStep?: number,
+    offsetDeltaMax?: number,
+    offsetDeltaMin?: number,
+    offsetRange?: number
 }
 
 export class ProgressiveRandom extends DataGenerator<Point, ProgressiveRandomDataGeneratorProps> {
@@ -13,25 +15,34 @@ export class ProgressiveRandom extends DataGenerator<Point, ProgressiveRandomDat
 
     generator( args: ProgressiveRandomDataGeneratorProps ) {
         const data: Point[] = []
-        const numberOfPoints = args.numberOfPoints || 10000
-        const randomStep = args.randomStep || 250
-        const step = args.step || 1
-        let random = Math.random()
-        let curStep = step
-        for ( let i = 0; i < numberOfPoints; i++ ) {
-            if ( i % randomStep === 0 )
-                random = Math.random()
+        const points = args.numberOfPoints || 1000
+        const offsetStep = args.offsetStep || Math.floor( points / 10 )
+        const offsetDeltaMax = args.offsetDeltaMax || 0.9
+        const offsetDeltaMin = args.offsetDeltaMin === 0 ? 0 : args.offsetDeltaMin || 0.1
+        const offsetRange = args.offsetRange || 0.7
+
+        let offset = 0.5
+        for ( let i = 0; i < points; i++ ) {
+            if ( i % offsetStep === 0 ) {
+                const newOffset = Math.random() * ( offsetDeltaMax - offsetDeltaMin ) + offsetDeltaMin
+                offset = Math.random() > 0.5 ? offset + newOffset : offset - newOffset
+            }
+            if ( offset + offsetRange > 1 ) {
+                offset = 1 - offsetRange
+            } else if ( offset < 0 ) {
+                offset = 0
+            }
+
             data.push( {
-                x: curStep - ( Math.random() + random ) / 2,
-                y: ( Math.random() + random ) / 2
+                x: i,
+                y: offset + Math.random() * offsetRange
             } )
-            curStep += step
         }
+
         return Promise.resolve( data )
     }
 
     infiniteReset( values: Point[], length: number ) {
-        const step = this.options.step || 1
-        return values.map( val => ( { x: val.x + step * length, y: val.y } ) )
+        return values.map( val => ( { x: val.x + length, y: val.y } ) )
     }
 }
