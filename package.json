@@ -1,4 +1,10 @@
 {
+  "name": "xydata",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/xydata.js",
+  "module": "dist/xydata.es.js",
+  "types": "dist/xydata.d.ts",
   "scripts": {
     "test": "gulp test:watch",
     "lint": "gulp lint:watch",
@@ -6,7 +12,8 @@
     "ci:test": "gulp test",
     "ci:lint": "gulp lint",
     "build": "gulp build",
-    "build:watch": "gulp build:watch"
+    "build:watch": "gulp build:watch",
+    "prepack": "npm install && gulp build"
   },
   "devDependencies": {
     "@types/chai": "^4.1.4",
@@ -31,5 +38,9 @@
   },
   "dependencies": {
     "eventer": "git+ssh://git@gitlab.com:arction/Eventer.git"
-  }
+  },
+  "bugs": {
+    "url": "https://gitlab.com/arction/xydata/issues"
+  },
+  "homepage": "https://gitlab.com/arction/xydata#README"
 }

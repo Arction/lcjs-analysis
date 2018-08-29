@@ -55,7 +55,14 @@ gulp
             .then(bundle => {
                 bundle.write({
                     file: 'dist/xydata.js',
-                    format: 'umd',
+                    format: 'cjs',
+                    exports: 'named',
+                    sourcemap: true,
+                    name: 'xydata'
+                })
+                bundle.write({
+                    file: 'dist/xydata.es.js',
+                    format: 'es',
                     exports: 'named',
                     sourcemap: true,
                     name: 'xydata'

@@ -1,6 +1,7 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
+    "declaration": true,
     "outDir": "dist",
     "module": "ES2015",
     "target": "es2015",
@@ -19,6 +20,7 @@
     ]
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "test"
   ]
 }
