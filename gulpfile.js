@@ -7,6 +7,7 @@ const rollupTypescript = require('rollup-plugin-typescript2')
 const rollupNodeResolve = require('rollup-plugin-node-resolve')
 const rollupCommonjs = require('rollup-plugin-commonjs')
 const rollupSourceMaps = require('rollup-plugin-sourcemaps')
+const pkg = require('./package.json')
 const watch = (paths, tasks) => () => gulp.watch(paths, tasks)
 const allFiles = ['src/**/*.ts', 'test/**/*.ts']
 /**
@@ -54,15 +55,22 @@ gulp
         })
             .then(bundle => {
                 bundle.write({
-                    file: 'dist/xydata.js',
+                    file: pkg.main,
                     format: 'cjs',
                     exports: 'named',
                     sourcemap: true,
                     name: 'xydata'
                 })
                 bundle.write({
-                    file: 'dist/xydata.es.js',
+                    file: pkg.module,
                     format: 'es',
+                    exports: 'named',
+                    sourcemap: true,
+                    name: 'xydata'
+                })
+                bundle.write({
+                    file: pkg.iife,
+                    format: 'iife',
                     exports: 'named',
                     sourcemap: true,
                     name: 'xydata'

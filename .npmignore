@@ -6,3 +6,5 @@ gulpfile.js
 tsconfig.json
 tslint.json
 .gitlab-ci.yml
+.rpt2_cache
+.vscode

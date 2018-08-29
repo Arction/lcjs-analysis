@@ -2,9 +2,10 @@
   "name": "xydata",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/xydata.js",
-  "module": "dist/xydata.es.js",
-  "types": "dist/xydata.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.es.js",
+  "iife": "dist/index.iife.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "gulp test:watch",
     "lint": "gulp lint:watch",
