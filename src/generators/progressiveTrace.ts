@@ -1,8 +1,7 @@
-import { DataGenerator, Point } from '../data-generator'
+import { DataGenerator, Point, PointDataHost } from '../data-generator'
 
 export interface ProgressiveTraceProps {
     numberOfPoints?: number,
-    xStep?: number,
     yStep?: number
 }
 
@@ -14,20 +13,17 @@ export class ProgressiveTrace extends DataGenerator<Point, ProgressiveTraceProps
     generator( args: ProgressiveTraceProps ) {
         const genData: Point[] = []
         const numberOfPoints = args.numberOfPoints || 10000
-        const xStep = args.xStep || 1
         const yStep = args.yStep || 1
 
+        let previous = { x: 0, y: 0 }
         for ( let i = 0; i < numberOfPoints; i++ ) {
-            genData.push( {
-                x: i * xStep,
-                y: Math.random() * yStep
-            } )
+            const point = {
+                x: i,
+                y: previous.y + Math.random() * yStep - 0.5
+            }
+            genData.push( point )
+            previous = point
         }
-        return Promise.resolve( genData )
-    }
-
-    infiniteReset( data: Point[], length: number ) {
-        const step = this.options.xStep || 1
-        return data.map( val => ( { x: val.x + step * length, y: val.y } ) )
+        return new PointDataHost( Promise.resolve( genData ) )
     }
 }

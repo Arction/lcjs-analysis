@@ -5,7 +5,7 @@ export interface StreamOptions<T> {
     batchSize?: number,
     scalingFunction?: ( val: T ) => T,
     infinite?: boolean,
-    infiniteReset: ( values: T[], length: number ) => T[]
+    infiniteReset: ( values: T[], length?: number ) => T[]
 }
 
 export class Stream<T> {
@@ -39,7 +39,7 @@ export class Stream<T> {
                         const toEnd = batchSize - vals.length
                         const tempVals = this.options.infiniteReset( values.slice( 0, toEnd ), values.length )
                         vals = vals.concat( tempVals )
-                        values = this.options.infiniteReset( values, values.length )
+                        values = this.options.infiniteReset( values )
                         count = toEnd
                     }
                     if ( vals.length > 0 )

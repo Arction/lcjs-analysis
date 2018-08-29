@@ -1,4 +1,4 @@
-import { DataGenerator, Point } from '../data-generator'
+import { Point, DataGenerator, PointDataHost } from '../data-generator'
 
 /**
  * Options for the Progressive random data generator.
@@ -74,10 +74,6 @@ export class ProgressiveRandom extends DataGenerator<Point, ProgressiveRandomOpt
             } )
         }
 
-        return Promise.resolve( data )
-    }
-
-    infiniteReset( values: Point[], length: number ) {
-        return values.map( val => ( { x: val.x + length, y: val.y } ) )
+        return new PointDataHost( Promise.resolve( data ) )
     }
 }

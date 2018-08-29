@@ -6,12 +6,23 @@ export interface Point {
 }
 
 export abstract class DataGenerator<T, K> {
-    protected readonly data: Promise<T[]>
     protected readonly options: K
-
     constructor( args: K ) {
         this.options = args
-        this.data = this.generator( args || {} )
+    }
+
+    generate(): DataHost<T> {
+        return this.generator( this.options )
+    }
+
+    abstract generator( args: K ): DataHost<T>
+}
+
+export abstract class DataHost<T> {
+    protected readonly data: Promise<T[]>
+
+    constructor( data: Promise<T[]> ) {
+        this.data = data
         this.infiniteReset = this.infiniteReset.bind( this )
     }
 
@@ -24,7 +35,16 @@ export abstract class DataGenerator<T, K> {
         return this.data
     }
 
-    abstract generator( args: K ): Promise<T[]>
+    abstract infiniteReset( data: T[], lenght?: number ): T[]
+}
 
-    abstract infiniteReset( data: T[], lenght: number ): T[]
+export class PointDataHost extends DataHost<Point> {
+    constructor( data: Promise<Point[]> ) {
+        super( data )
+    }
+
+    infiniteReset( data: Point[], offset?: number ): Point[] {
+        const nOffset = offset || data.length
+        return data.map( val => ( { x: val.x + nOffset, y: val.y } ) )
+    }
 }
