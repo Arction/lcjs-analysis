@@ -75,6 +75,6 @@ export class ProgressiveRandom extends DataGenerator<Point, ProgressiveRandomOpt
             } )
         }
 
-        return new PointDataHost( Promise.resolve( data ) )
+        return Promise.resolve( new PointDataHost( data ) )
     }
 }

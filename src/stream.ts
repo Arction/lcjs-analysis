@@ -1,49 +1,63 @@
 export interface StreamOptions<T> {
     interval?: number,
     batchSize?: number,
-    scalingFunction?: ( val: T ) => T,
     infinite?: boolean,
-    infiniteReset: ( values: T[], length?: number ) => T[]
+    infiniteReset: ( value: T ) => T
 }
 
 export class Stream<T> {
-    constructor( private readonly content: Promise<T[]>, private readonly options: StreamOptions<T> ) { }
-    forEach( handler: ( value: T[] ) => void ) {
-        const interval = this.options.interval || 1000
-        const batchSize = this.options.batchSize || 1
-        this.content.then( value => {
-            let values = value
-            let count = 0
-            const len = value.length
-            const curInterval = setInterval(
-                () => {
-                    let end = 0
-                    if ( count + batchSize < len ) {
-                        end = count + batchSize
-                    } else if ( count < len ) {
-                        end = len
-                    } else {
-                        if ( this.options.infinite === false ) {
-                            clearInterval( curInterval )
-                        } else {
-                            count = 0
-                            end = batchSize
-                            values = this.options.infiniteReset( values, values.length )
-                        }
-                    }
-                    let vals = values.slice( count, end )
-                    count += batchSize
-                    if ( this.options.infinite !== false && vals.length < batchSize ) {
-                        const toEnd = batchSize - vals.length
-                        const tempVals = this.options.infiniteReset( values.slice( 0, toEnd ), values.length )
-                        vals = vals.concat( tempVals )
-                        values = this.options.infiniteReset( values )
-                        count = toEnd
-                    }
-                    if ( vals.length > 0 )
-                        handler( vals )
-                }, interval
-            )
-        } )
+    private data: T[] = []
+    private readonly interval = this.options.interval || 1000
+    private readonly batchSize = this.options.batchSize || 1
+
+    constructor( private readonly options: StreamOptions<T> ) { }
+
+    private consume(): T[] {
+        let cutCount = this.batchSize
+        if ( this.data.length < this.batchSize ) {
+            cutCount = this.data.length
+        }
+        const consumed = this.data.splice( 0, cutCount )
+        if ( this.options.infinite ) {
+            if ( consumed.length < this.batchSize ) {
+                throw new Error( 'Not implemented, implement it!' )
+            } else {
+                this.data = this.data.concat( consumed.map( dataPoint => this.options.infiniteReset( dataPoint ) ) )
+            }
+        }
+        return consumed
+    }
+
+    /**
+     * Push new data to the end of stream.
+     * @param newData New data point
+     */
+    push( newData: T | T[] ) {
+        this.data = this.data.concat( newData )
+    }
+
+    map( handler: ( value: T, index: number, array: T[] ) => T ) {
+        const newStream = new Stream<T>( { ...this.options, infinite: false } )
+        const intervalRef = setInterval( () => {
+            if ( this.data.length <= 0 ) {
+                clearInterval( intervalRef )
+                return
+            }
+            const curData = this.consume()
+            const mapped = curData.map( handler )
+            newStream.push( mapped )
+        }, this.interval )
+        return newStream
+    }
+
+    forEach( handler: ( value: T, index: number, array: T[] ) => void ) {
+        const intervalRef = setInterval( () => {
+            if ( this.data.length <= 0 ) {
+                clearInterval( intervalRef )
+                return
+            }
+            const curData = this.consume()
+            curData.forEach( handler )
+        }, this.interval )
     }
 }

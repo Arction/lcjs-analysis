@@ -25,6 +25,6 @@ export class ProgressiveTrace extends DataGenerator<Point, ProgressiveTraceProps
             genData.push( point )
             previous = point
         }
-        return new PointDataHost( Promise.resolve( genData ) )
+        return Promise.resolve( new PointDataHost( genData ) )
     }
 }

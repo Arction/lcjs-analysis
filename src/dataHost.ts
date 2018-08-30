@@ -19,9 +19,9 @@ export interface Point {
  * a stream or a promise.
  */
 export abstract class DataHost<T> {
-    protected readonly data: Promise<T[]>
+    protected readonly data: T[]
 
-    constructor( data: Promise<T[]> ) {
+    constructor( data: T[] ) {
         this.data = data
         this.infiniteReset = this.infiniteReset.bind( this )
     }
@@ -33,7 +33,9 @@ export abstract class DataHost<T> {
      */
     toStream( options?: StreamOptions<T> ): Stream<T> {
         const alteredOptions = { ...options, infiniteReset: this.infiniteReset }
-        return new Stream<T>( this.data, alteredOptions )
+        const stream = new Stream<T>( alteredOptions )
+        stream.push( this.data )
+        return stream
     }
 
     /**
@@ -41,29 +43,26 @@ export abstract class DataHost<T> {
      * Consecutive calls always return a new instance of same data.
      */
     toPromise(): Promise<T[]> {
-        return this.data
+        return Promise.resolve( this.data )
     }
 
     /**
      * Handles resetting the data when used as infinite stream of data.
-     * Allows the stream to continue from beginning with corrected values for e.g. XY data X is offset by
-     * the lenght of data at each reset.
+     * Used to recalculate the point when it is moved to end of stream.
      * @param data Data to reset
-     * @param offset The offset to use when resetting, basically data length.
      */
-    abstract infiniteReset( data: T[], offset?: number ): T[]
+    abstract infiniteReset( data: T ): T
 }
 
 /**
  * A data host that can provide Point data stream and promise.
  */
 export class PointDataHost extends DataHost<Point> {
-    constructor( data: Promise<Point[]> ) {
+    constructor( data: Point[] ) {
         super( data )
     }
 
-    infiniteReset( data: Point[], offset?: number ): Point[] {
-        const nOffset = offset || data.length
-        return data.map( val => ( { x: val.x + nOffset, y: val.y } ) )
+    infiniteReset( data: Point ): Point {
+        return { x: data.x + this.data.length, y: data.y }
     }
 }
