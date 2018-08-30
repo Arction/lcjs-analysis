@@ -1,4 +1,5 @@
-import { Point, DataGenerator, PointDataHost } from '../data-generator'
+import { DataGenerator } from '../dataGenerator'
+import { Point, PointDataHost } from '../dataHost'
 
 /**
  * Options for the Progressive random data generator.

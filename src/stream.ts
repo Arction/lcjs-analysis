@@ -1,5 +1,3 @@
-import { Point } from './data-generator'
-
 export interface StreamOptions<T> {
     interval?: number,
     batchSize?: number,

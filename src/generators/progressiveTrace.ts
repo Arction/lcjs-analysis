@@ -1,4 +1,5 @@
-import { DataGenerator, Point, PointDataHost } from '../data-generator'
+import { DataGenerator } from '../dataGenerator'
+import { Point, PointDataHost } from '../dataHost'
 
 export interface ProgressiveTraceProps {
     numberOfPoints?: number,
