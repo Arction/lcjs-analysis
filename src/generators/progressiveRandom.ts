@@ -53,7 +53,7 @@ export class ProgressiveRandom extends DataGenerator<Point, ProgressiveRandomOpt
 
         let offset = 0.5
         for ( let i = 0; i < points; i++ ) {
-            if ( i % offsetStep === 0 ) {
+            if ( i % offsetStep === 0 || i === 0 ) {
                 const newOffset = Math.random() * ( offsetDeltaMax - offsetDeltaMin ) + offsetDeltaMin
                 offset = Math.random() > 0.5 ? offset + newOffset : offset - newOffset
             }

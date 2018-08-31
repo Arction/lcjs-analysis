@@ -33,7 +33,7 @@ export class DataHost<T> {
      * Consecutive calls always return a new instance of same data.
      * @param options Options for the stream
      */
-    toStream( options?: StreamOptions<T> ): Stream<T> {
+    toStream( options?: StreamOptions ): Stream<T> {
         const stream = new Stream<T>( options || {}, this.infiniteReset )
         stream.push( this.data )
         return stream

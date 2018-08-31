@@ -1,7 +1,9 @@
+export type StreamContinueHandler = () => boolean
+
 /**
  * Configuration object for the stream
  */
-export interface StreamOptions<T> {
+export interface StreamOptions {
     /**
      * How often the stream processes the data it has
      */
@@ -11,10 +13,13 @@ export interface StreamOptions<T> {
      */
     batchSize?: number,
     /**
-     * Is the stream going to continue infinitely.
-     * If the stream is infinite the data is repeated.
+     * Set to true to repeat the stream infinitely.
+     * Set to false to only continue until the stream has no data.
+     * Set to a number to get n batches of the data.
+     * Set to call back function to continue the stream until the callback returns false.
+     * Leaving the value as undefined repeats the stream infinitely.
      */
-    infinite?: boolean
+    repeat?: boolean | number | StreamContinueHandler
 }
 
 /**
@@ -60,12 +65,32 @@ export class Stream<T> {
     private infiniteReset: ( value: T ) => T
 
     /**
+     * How many batches of data to stream.
+     * -1 = infinite stream
+     * -2 = until the end of data
+     */
+    private batchesLeft: number = -1
+    /**
+     * Handler used to check whether or not the stream should continue.
+     */
+    private continueHandler?: StreamContinueHandler
+
+    /**
      * Create a new instance of a stream.
      * @param options The options to use to construct this stream.
      */
-    constructor( private readonly options: StreamOptions<T>, infiniteReset: ( value: T ) => T ) {
+    constructor( private readonly options: StreamOptions, infiniteReset: ( value: T ) => T ) {
         this.runStream = this.runStream.bind( this )
         this.infiniteReset = infiniteReset
+        if ( options.repeat !== undefined ) {
+            if ( typeof options.repeat === 'boolean' ) {
+                this.batchesLeft = options.repeat ? -1 : -2
+            } else if ( typeof options.repeat === 'number' ) {
+                this.batchesLeft = options.repeat + 1
+            } else if ( typeof options.repeat === 'function' ) {
+                this.continueHandler = options.repeat
+            }
+        }
     }
 
     /**
@@ -79,7 +104,7 @@ export class Stream<T> {
             cutCount = this.data.length
         }
         const consumed = this.data.splice( 0, cutCount )
-        if ( this.options.infinite && consumed.length > 0 ) {
+        if ( ( this.batchesLeft > 0 || this.batchesLeft === -1 ) && consumed.length > 0 ) {
             this.data = this.data.concat( consumed.map( dataPoint => this.infiniteReset( dataPoint ) ) );
             // If the data wasn't enough to fill the batch size, take the first element of the data and add it to
             // the batch and then move it to the end of the data
@@ -95,10 +120,26 @@ export class Stream<T> {
     }
 
     /**
-     * Handles consuming the data with correct handler. The stream will be active until it has no more data.
+     * Check whether the stream should be continued or not.
+     */
+    private checkStreamContinue() {
+        let continueStream = ( this.batchesLeft > 0 ||
+            this.batchesLeft === -1 ||
+            ( this.batchesLeft === -2 && this.data.length > 0 ) )
+            ? true : false
+        if ( this.continueHandler ) {
+            continueStream = this.continueHandler() === true
+        }
+        return continueStream
+    }
+
+    /**
+     * Handles consuming the data with correct handler. The stream will be active until it has no more data or
+     * the streams repeat count hits 0 or the continue callback returns false.
      */
     private runStream() {
-        if ( this.data && this.data.length > 0 ) {
+        const continueStream = this.checkStreamContinue()
+        if ( this.data && this.data.length > 0 && continueStream ) {
             if ( this.streamHandler ) {
                 const curData = this.consume()
                 this.streamHandler( curData )
@@ -107,6 +148,7 @@ export class Stream<T> {
         } else {
             this.streamActive = false
         }
+        if ( this.batchesLeft > 0 ) this.batchesLeft--
     }
 
     /**
@@ -134,7 +176,7 @@ export class Stream<T> {
      * @returns A new stream with the data mapped by the handler.
      */
     map( handler: ( value: T, index: number, array: T[] ) => T ) {
-        this.outputStream = new Stream<T>( { ...this.options, infinite: false }, this.infiniteReset )
+        this.outputStream = new Stream<T>( { ...this.options, repeat: false }, this.infiniteReset )
         this.mapHandler = handler
         this.streamHandler = this._map
         this.activateStream()
