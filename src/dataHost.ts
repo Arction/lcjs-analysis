@@ -18,12 +18,14 @@ export interface Point {
  * A base class for a data host that is capable to store the data and provide it as
  * a stream or a promise.
  */
-export abstract class DataHost<T> {
+export class DataHost<T> {
     protected readonly data: T[]
+    private readonly infiniteResetHandler: ( dataToReset: T, data: T[] ) => T
 
-    constructor( data: T[] ) {
+    constructor( data: T[], infiniteResetHandler: ( dataToReset: T, data: T[] ) => T ) {
         this.data = data
         this.infiniteReset = this.infiniteReset.bind( this )
+        this.infiniteResetHandler = infiniteResetHandler
     }
 
     /**
@@ -50,18 +52,7 @@ export abstract class DataHost<T> {
      * Used to recalculate the point when it is moved to end of stream.
      * @param data Data to reset
      */
-    abstract infiniteReset( data: T ): T
-}
-
-/**
- * A data host that can provide Point data stream and promise.
- */
-export class PointDataHost extends DataHost<Point> {
-    constructor( data: Point[] ) {
-        super( data )
-    }
-
-    infiniteReset( data: Point ): Point {
-        return { x: data.x + this.data.length, y: data.y }
+    infiniteReset( data: T ): T {
+        return this.infiniteResetHandler( data, this.data )
     }
 }

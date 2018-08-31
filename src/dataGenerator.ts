@@ -1,4 +1,4 @@
-import { DataHost } from './dataHost'
+import { DataHost } from 'dataHost'
 
 /**
  * Abstract base class for all data generators.
@@ -26,4 +26,11 @@ export abstract class DataGenerator<T, K> {
      * @param args Generator arguments
      */
     abstract generator( args: K ): Promise<DataHost<T>>
+    /**
+     * Handles resetting the data when used as infinite stream of data.
+     * Used to recalculate the point when it is moved to end of stream.
+     * @param dataToReset Data to reset
+     * @param data All of the data
+     */
+    abstract infiniteReset( dataToReset: T, data: T[] ): T
 }

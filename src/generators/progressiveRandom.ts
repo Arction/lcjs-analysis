@@ -1,5 +1,5 @@
 import { DataGenerator } from '../dataGenerator'
-import { Point, PointDataHost } from '../dataHost'
+import { Point, DataHost } from '../dataHost'
 
 /**
  * Options for the Progressive random data generator.
@@ -75,6 +75,10 @@ export class ProgressiveRandom extends DataGenerator<Point, ProgressiveRandomOpt
             } )
         }
 
-        return Promise.resolve( new PointDataHost( data ) )
+        return Promise.resolve( new DataHost<Point>( data, this.infiniteReset ) )
+    }
+
+    infiniteReset( dataToReset: Point, data: Point[] ): Point {
+        return { x: dataToReset.x + data.length, y: dataToReset.y }
     }
 }

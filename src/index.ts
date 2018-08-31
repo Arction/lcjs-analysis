@@ -4,6 +4,7 @@
 
 export { ProgressiveRandom } from './generators/progressiveRandom'
 export { ProgressiveTrace } from './generators/progressiveTrace'
+export { Trace } from './generators/trace'
 export { Stream } from './stream'
 export { DataGenerator } from './dataGenerator'
-export { DataHost, PointDataHost } from './dataHost'
+export { DataHost } from './dataHost'
