@@ -26,6 +26,7 @@ export abstract class DataGenerator<T, K> {
      * @param args Generator arguments
      */
     abstract generator( args: K ): Promise<DataHost<T>>
+
     /**
      * Handles resetting the data when used as infinite stream of data.
      * Used to recalculate the point when it is moved to end of stream.
@@ -33,4 +34,11 @@ export abstract class DataGenerator<T, K> {
      * @param data All of the data
      */
     abstract infiniteReset( dataToReset: T, data: T[] ): T
+}
+
+export interface CommonGeneratorOptions {
+    /**
+     * How many points of data to generate.
+     */
+    numberOfPoints?: number
 }

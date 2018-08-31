@@ -1,28 +1,21 @@
-import { DataGenerator } from '../dataGenerator'
+import { DataGenerator, CommonGeneratorOptions } from '../dataGenerator'
 import { Point } from '../dataHost'
-import { ProgressiveTraceProps } from './progressiveTrace'
 import { DataHost } from '../dataHost'
 
-export interface TraceProps extends ProgressiveTraceProps {
-    xStep?: number
-}
-
-export class Trace extends DataGenerator<Point, TraceProps> {
-    constructor( args?: TraceProps ) {
+export class Trace extends DataGenerator<Point, CommonGeneratorOptions> {
+    constructor( args?: CommonGeneratorOptions ) {
         super( args )
     }
 
-    generator( args: TraceProps ) {
+    generator( args: CommonGeneratorOptions ) {
         const genData: Point[] = []
         const numberOfPoints = args.numberOfPoints || 10000
-        const yStep = args.yStep || 1
-        const xStep = args.xStep || 1
 
         let previous = { x: 0, y: 0 }
         for ( let i = 0; i < numberOfPoints; i++ ) {
             const point = {
-                x: previous.x + Math.random() * xStep - 0.5,
-                y: previous.y + Math.random() * yStep - 0.5
+                x: previous.x + ( Math.random() - 0.5 ) * 2,
+                y: previous.y + ( Math.random() - 0.5 ) * 2
             }
             genData.push( point )
             previous = point
