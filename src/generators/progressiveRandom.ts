@@ -7,28 +7,21 @@ import { Point, DataHost } from '../dataHost'
 export interface ProgressiveRandomOptions extends CommonGeneratorOptions {
     /**
      * How often to change the offset.
-     * Default: numberOfPoints / 10
      */
     offsetStep?: number,
     /**
      * Maximum change of the offset during one step.
      * Values higher than max are forced to max.
-     * Default: 0.3
-     * Max: 1
      */
     offsetDeltaMax?: number,
     /**
      * Minimum change of the offset during one step.
      * Values lower than min are forec to min.
-     * Default: 0.05
-     * Min: 0
      */
     offsetDeltaMin?: number,
     /**
      * Maximum value for the random data before addding the offset.
      * Values higher than max are forced to max.
-     * Default: 0.3
-     * Max: 1
      */
     dataMax?: number
 }
@@ -39,6 +32,42 @@ export interface ProgressiveRandomOptions extends CommonGeneratorOptions {
 export class ProgressiveRandom extends DataGenerator<Point, ProgressiveRandomOptions> {
     constructor( args?: ProgressiveRandomOptions ) {
         super( args )
+    }
+
+    /**
+     * Returns a new Data generator with the new numberOfPoints.
+     * @param numberOfPoints How many points of data to generate
+     */
+    setNumberOfPoints( numberOfPoints: number ) {
+        return new ProgressiveRandom( this.options ? { ...this.options, numberOfPoints } : { numberOfPoints } )
+    }
+    /**
+     * Returns a new Data generator with the new offsetStep.
+     * @param offsetStep How often to change the offset
+     */
+    setOffsetStep( offsetStep: number ) {
+        return new ProgressiveRandom( this.options ? { ...this.options, offsetStep } : { offsetStep } )
+    }
+    /**
+     * Returns a new Data generator with the new offsetDeltaMax.
+     * @param offsetDeltaMax Maximum change of offset during one step.
+     */
+    setOffsetDeltaMax( offsetDeltaMax: number ) {
+        return new ProgressiveRandom( this.options ? { ...this.options, offsetDeltaMax } : { offsetDeltaMax } )
+    }
+    /**
+     * Returns a new Data generator with the new offsetDeltaMin.
+     * @param offsetDeltaMin Minimum change of offset during one step.
+     */
+    setOffsetDeltaMin( offsetDeltaMin: number ) {
+        return new ProgressiveRandom( this.options ? { ...this.options, offsetDeltaMin } : { offsetDeltaMin } )
+    }
+    /**
+     * Returns a new Data generator with the new dataMax.
+     * @param dataMax Maximum value for the random data before addding the offset.
+     */
+    setDataMax( dataMax: number ) {
+        return new ProgressiveRandom( this.options ? { ...this.options, dataMax } : { dataMax } )
     }
 
     generator( args: ProgressiveRandomOptions ) {

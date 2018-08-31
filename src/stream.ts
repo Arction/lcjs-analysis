@@ -78,6 +78,7 @@ export class Stream<T> {
     /**
      * Create a new instance of a stream.
      * @param options The options to use to construct this stream.
+     * @param infiniteReset A function to use when offsetting the data during moving it to back of the data stream
      */
     constructor( private readonly options: StreamOptions, infiniteReset: ( value: T ) => T ) {
         this.runStream = this.runStream.bind( this )

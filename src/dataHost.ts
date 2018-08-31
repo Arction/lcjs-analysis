@@ -1,4 +1,4 @@
-import { Stream, StreamOptions } from './stream'
+import { Stream, StreamOptions, StreamContinueHandler } from './stream'
 
 /**
  * Represents a xy point
@@ -21,20 +21,26 @@ export interface Point {
 export class DataHost<T> {
     protected readonly data: T[]
     private readonly infiniteResetHandler: ( dataToReset: T, data: T[] ) => T
+    private streamOptions: StreamOptions
 
-    constructor( data: T[], infiniteResetHandler: ( dataToReset: T, data: T[] ) => T ) {
+    constructor( data: T[], infiniteResetHandler: ( dataToReset: T, data: T[] ) => T, streamOptions?: StreamOptions ) {
         this.data = data
         this.infiniteReset = this.infiniteReset.bind( this )
         this.infiniteResetHandler = infiniteResetHandler
+        const streamOpts = streamOptions || {}
+        this.streamOptions = {
+            interval: streamOpts.interval || 1000,
+            batchSize: streamOpts.batchSize || 10,
+            repeat: streamOpts.repeat || true
+        }
     }
 
     /**
      * Returns a new stream of the data that the host stores.
      * Consecutive calls always return a new instance of same data.
-     * @param options Options for the stream
      */
-    toStream( options?: StreamOptions ): Stream<T> {
-        const stream = new Stream<T>( options || {}, this.infiniteReset )
+    toStream(): Stream<T> {
+        const stream = new Stream<T>( this.streamOptions, this.infiniteReset )
         stream.push( this.data )
         return stream
     }
@@ -54,5 +60,38 @@ export class DataHost<T> {
      */
     infiniteReset( data: T ): T {
         return this.infiniteResetHandler( data, this.data )
+    }
+
+    /**
+     * Returns a new data host with the new interval and same data that the original host had.
+     * @param interval New interval delay for the stream
+     */
+    setStreamInterval( interval?: number ) {
+        return new DataHost<T>( this.data,
+            this.infiniteResetHandler,
+            this.streamOptions ? { ...this.streamOptions, interval } : { interval }
+        )
+    }
+
+    /**
+     * Returns a new data host with the new batch size and same data that the original host had.
+     * @param batchSize New batch size for the stream
+     */
+    setStreamBatchSize( batchSize?: number ) {
+        return new DataHost<T>( this.data,
+            this.infiniteResetHandler,
+            this.streamOptions ? { ...this.streamOptions, batchSize } : { batchSize }
+        )
+    }
+
+    /**
+     * Returns a new data host with the new repeat and same data that the original host had.
+     * @param repeat New repeat for the stream
+     */
+    setStreamRepeat( repeat?: boolean | number | StreamContinueHandler ) {
+        return new DataHost<T>( this.data,
+            this.infiniteResetHandler,
+            this.streamOptions ? { ...this.streamOptions, repeat } : { repeat }
+        )
     }
 }

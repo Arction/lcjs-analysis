@@ -34,6 +34,12 @@ export abstract class DataGenerator<T, K> {
      * @param data All of the data
      */
     abstract infiniteReset( dataToReset: T, data: T[] ): T
+
+    /**
+     * Returns a new Data generator with the new numberOfPoints.
+     * @param numberOfPoints How many points of data to generate
+     */
+    abstract setNumberOfPoints( numberOfPoints: number ): DataGenerator<T, K>
 }
 
 export interface CommonGeneratorOptions {

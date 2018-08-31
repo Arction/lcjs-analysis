@@ -7,6 +7,14 @@ export class Trace extends DataGenerator<Point, CommonGeneratorOptions> {
         super( args )
     }
 
+    /**
+     * Returns a new Data generator with the new numberOfPoints.
+     * @param numberOfPoints How many points of data to generate
+     */
+    setNumberOfPoints( numberOfPoints: number ) {
+        return new Trace( this.options ? { ...this.options, numberOfPoints } : { numberOfPoints } )
+    }
+
     generator( args: CommonGeneratorOptions ) {
         const genData: Point[] = []
         const numberOfPoints = args.numberOfPoints || 10000
