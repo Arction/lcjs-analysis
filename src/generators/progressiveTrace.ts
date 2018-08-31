@@ -7,7 +7,7 @@ export interface ProgressiveTraceProps {
 }
 
 export class ProgressiveTrace extends DataGenerator<Point, ProgressiveTraceProps> {
-    constructor( args: ProgressiveTraceProps ) {
+    constructor( args?: ProgressiveTraceProps ) {
         super( args )
     }
 

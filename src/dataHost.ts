@@ -32,8 +32,7 @@ export abstract class DataHost<T> {
      * @param options Options for the stream
      */
     toStream( options?: StreamOptions<T> ): Stream<T> {
-        const alteredOptions = { ...options, infiniteReset: this.infiniteReset }
-        const stream = new Stream<T>( alteredOptions )
+        const stream = new Stream<T>( options || {}, this.infiniteReset )
         stream.push( this.data )
         return stream
     }

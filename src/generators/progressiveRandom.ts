@@ -42,7 +42,7 @@ export interface ProgressiveRandomOptions {
  * Progressive random data generator.
  */
 export class ProgressiveRandom extends DataGenerator<Point, ProgressiveRandomOptions> {
-    constructor( args: ProgressiveRandomOptions ) {
+    constructor( args?: ProgressiveRandomOptions ) {
         super( args )
     }
 
@@ -50,11 +50,11 @@ export class ProgressiveRandom extends DataGenerator<Point, ProgressiveRandomOpt
         const data: Point[] = []
 
         // Setup defaults
-        const points = args.numberOfPoints || 1000
-        const offsetStep = args.offsetStep || Math.floor( points / 10 )
-        const offsetDeltaMax = Math.min( args.offsetDeltaMax || 0.3, 1 )
-        const offsetDeltaMin = Math.max( args.offsetDeltaMin === 0 ? 0 : args.offsetDeltaMin || 0.05, 0 )
-        const dataMax = Math.min( args.dataMax || 0.3, 1 )
+        const points = args.numberOfPoints ? args.numberOfPoints : 1000
+        const offsetStep = args.offsetStep ? args.offsetStep === 0 ? 0 : args.offsetStep : Math.floor( points / 10 )
+        const offsetDeltaMax = Math.min( args.offsetDeltaMax ? args.offsetDeltaMax : 0.3, 1 )
+        const offsetDeltaMin = Math.max( args.offsetDeltaMin ? args.offsetDeltaMin === 0 ? 0 : args.offsetDeltaMin : 0.05, 0 )
+        const dataMax = Math.min( args.dataMax ? args.dataMax : 0.3, 1 )
 
         let offset = 0.5
         for ( let i = 0; i < points; i++ ) {

@@ -8,8 +8,8 @@ export abstract class DataGenerator<T, K> {
     /**
      * Generator options
      */
-    protected readonly options: K
-    constructor( args: K ) {
+    protected readonly options?: K
+    constructor( args?: K ) {
         this.options = args
     }
 
@@ -17,7 +17,7 @@ export abstract class DataGenerator<T, K> {
      * Generate new instance of DataHost with unique data
      */
     generate(): Promise<DataHost<T>> {
-        return this.generator( this.options )
+        return this.generator( this.options || {} as K )
     }
 
     /**

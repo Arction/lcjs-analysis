@@ -1,8 +1,20 @@
+/**
+ * Configuration object for the stream
+ */
 export interface StreamOptions<T> {
+    /**
+     * How often the stream processes the data it has
+     */
     interval?: number,
+    /**
+     * How many elements of data is processed at same time
+     */
     batchSize?: number,
-    infinite?: boolean,
-    infiniteReset: ( value: T ) => T
+    /**
+     * Is the stream going to continue infinitely.
+     * If the stream is infinite the data is repeated.
+     */
+    infinite?: boolean
 }
 
 /**
@@ -41,13 +53,19 @@ export class Stream<T> {
      * How many elements from the data to process at one time.
      */
     private readonly batchSize = this.options.batchSize || 1
+    /**
+     * An function to use to reset the data when it is moved to the end of the stream.
+     * Only used if the stream is infinite.
+     */
+    private infiniteReset: ( value: T ) => T
 
     /**
      * Create a new instance of a stream.
      * @param options The options to use to construct this stream.
      */
-    constructor( private readonly options: StreamOptions<T> ) {
+    constructor( private readonly options: StreamOptions<T>, infiniteReset: ( value: T ) => T ) {
         this.runStream = this.runStream.bind( this )
+        this.infiniteReset = infiniteReset
     }
 
     /**
@@ -62,13 +80,13 @@ export class Stream<T> {
         }
         const consumed = this.data.splice( 0, cutCount )
         if ( this.options.infinite && consumed.length > 0 ) {
-            this.data = this.data.concat( consumed.map( dataPoint => this.options.infiniteReset( dataPoint ) ) );
+            this.data = this.data.concat( consumed.map( dataPoint => this.infiniteReset( dataPoint ) ) );
             // If the data wasn't enough to fill the batch size, take the first element of the data and add it to
             // the batch and then move it to the end of the data
             if ( consumed.length < this.batchSize ) {
                 while ( consumed.length < this.batchSize ) {
                     const nextPoint = this.data.splice( 0, 1 )[0];
-                    this.data = this.data.concat( this.options.infiniteReset( nextPoint ) )
+                    this.data = this.data.concat( this.infiniteReset( nextPoint ) )
                     consumed.push( nextPoint );
                 }
             }
@@ -116,7 +134,7 @@ export class Stream<T> {
      * @returns A new stream with the data mapped by the handler.
      */
     map( handler: ( value: T, index: number, array: T[] ) => T ) {
-        this.outputStream = new Stream<T>( { ...this.options, infinite: false } )
+        this.outputStream = new Stream<T>( { ...this.options, infinite: false }, this.infiniteReset )
         this.mapHandler = handler
         this.streamHandler = this._map
         this.activateStream()
