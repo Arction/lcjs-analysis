@@ -18,7 +18,7 @@ export interface ProgressiveRandomOptions {
     /**
      * Maximum change of the offset during one step.
      * Values higher than max are forced to max.
-     * Default: 0.1
+     * Default: 0.3
      * Max: 1
      */
     offsetDeltaMax?: number,
@@ -52,7 +52,7 @@ export class ProgressiveRandom extends DataGenerator<Point, ProgressiveRandomOpt
         // Setup defaults
         const points = args.numberOfPoints || 1000
         const offsetStep = args.offsetStep || Math.floor( points / 10 )
-        const offsetDeltaMax = Math.min( args.offsetDeltaMax || 0.1, 1 )
+        const offsetDeltaMax = Math.min( args.offsetDeltaMax || 0.3, 1 )
         const offsetDeltaMin = Math.max( args.offsetDeltaMin === 0 ? 0 : args.offsetDeltaMin || 0.05, 0 )
         const dataMax = Math.min( args.dataMax || 0.3, 1 )
 
