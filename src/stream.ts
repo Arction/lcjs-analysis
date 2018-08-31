@@ -61,11 +61,16 @@ export class Stream<T> {
             cutCount = this.data.length
         }
         const consumed = this.data.splice( 0, cutCount )
-        if ( this.options.infinite && this.data.length > 0 ) {
+        if ( this.options.infinite && consumed.length > 0 ) {
+            this.data = this.data.concat( consumed.map( dataPoint => this.options.infiniteReset( dataPoint ) ) );
+            // If the data wasn't enough to fill the batch size, take the first element of the data and add it to
+            // the batch and then move it to the end of the data
             if ( consumed.length < this.batchSize ) {
-                throw new Error( 'Not implemented, implement it!' )
-            } else {
-                this.data = this.data.concat( consumed.map( dataPoint => this.options.infiniteReset( dataPoint ) ) )
+                while ( consumed.length < this.batchSize ) {
+                    const nextPoint = this.data.splice( 0, 1 )[0];
+                    this.data = this.data.concat( this.options.infiniteReset( nextPoint ) )
+                    consumed.push( nextPoint );
+                }
             }
         }
         return consumed
