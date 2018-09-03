@@ -41,7 +41,7 @@ export class OHLCGenerator extends DataGenerator<OHLCData, OHLCGeneratorOptions>
      * Returns a new Data generator with the new time stamp to start generating the data.
      * @param startTimestamp The timestamp for the first data point.
      */
-    setStartTimestamp( startTimestamp: number ) {
+    setStartTimestamp( startTimestamp?: number ) {
         return new OHLCGenerator( this.options ? { ...this.options, startTimestamp } : { startTimestamp } )
     }
 
@@ -49,7 +49,7 @@ export class OHLCGenerator extends DataGenerator<OHLCData, OHLCGeneratorOptions>
      * Returns a new Data generator with the new data frequency.
      * @param dataFreq How long the time between two timestamps is.
      */
-    setDataFrequency( dataFreq: number ) {
+    setDataFrequency( dataFreq?: number ) {
         return new OHLCGenerator( this.options ? { ...this.options, dataFreq } : { dataFreq } )
     }
 
@@ -57,7 +57,7 @@ export class OHLCGenerator extends DataGenerator<OHLCData, OHLCGeneratorOptions>
      * Returns a new Data generator with the new starting value.
      * @param start What is the value the data generation should start from.
      */
-    setStart( start: number ) {
+    setStart( start?: number ) {
         return new OHLCGenerator( this.options ? { ...this.options, start } : { start } )
     }
 
@@ -65,17 +65,14 @@ export class OHLCGenerator extends DataGenerator<OHLCData, OHLCGeneratorOptions>
      * Returns a new Data generator with the new volatility.
      * @param volatility How volatile the data is. How much the data changes between data points.
      */
-    setVolatility( volatility: number ) {
+    setVolatility( volatility?: number ) {
         return new OHLCGenerator( this.options ? { ...this.options, volatility } : { volatility } )
     }
 
     generator( args: OHLCGeneratorOptions ) {
         const genData: OHLCData[] = []
         const numberOfPoints = args.numberOfPoints || 60
-        const startTimeStamp = args.startTimestamp !== undefined ?
-            args.startTimestamp
-            :
-            0
+        const startTimeStamp = args.startTimestamp !== undefined ? args.startTimestamp : 0
         const dataFreq = args.dataFreq || 1
         const volatility = args.volatility || 0.1
         const start = args.start || 10
@@ -86,12 +83,18 @@ export class OHLCGenerator extends DataGenerator<OHLCData, OHLCGeneratorOptions>
             const timeStamp = ( startTimeStamp + dataFreq * i )
 
             const dir = Math.random() > 0.5 ? 1 : -1
-            let newPoints = Array.from( Array( 4 ) ).map( v => prevPoint[4] + Math.random() * volatility * dir ).sort()
+            let newPoints = Array.from( Array( 4 ) ).map( v => {
+                let change = Math.random() * volatility * dir
+                if ( prevPoint[4] + change < 0 ) {
+                    change = change * -1
+                }
+                return prevPoint[4] + change
+            } ).sort()
             if ( dir < 0 ) {
                 newPoints = [newPoints[0], newPoints[2], newPoints[1], newPoints[3]]
             }
             dataPoint = [timeStamp, newPoints[1], newPoints[3], newPoints[0], newPoints[2]]
-            prevPoint = dataPoint.slice()
+            prevPoint = dataPoint
             genData.push( dataPoint )
         }
 
