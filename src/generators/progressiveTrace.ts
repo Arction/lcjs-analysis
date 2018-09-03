@@ -1,7 +1,7 @@
 import { DataGenerator, CommonGeneratorOptions } from '../dataGenerator'
 import { Point, DataHost } from '../dataHost'
 
-export class ProgressiveTrace extends DataGenerator<Point, CommonGeneratorOptions> {
+export class ProgressiveTraceGenerator extends DataGenerator<Point, CommonGeneratorOptions> {
     constructor( args?: CommonGeneratorOptions ) {
         super( args )
     }
@@ -11,7 +11,7 @@ export class ProgressiveTrace extends DataGenerator<Point, CommonGeneratorOption
      * @param numberOfPoints How many points of data to generate
      */
     setNumberOfPoints( numberOfPoints: number ) {
-        return new ProgressiveTrace( this.options ? { ...this.options, numberOfPoints } : { numberOfPoints } )
+        return new ProgressiveTraceGenerator( this.options ? { ...this.options, numberOfPoints } : { numberOfPoints } )
     }
 
     generator( args: CommonGeneratorOptions ) {

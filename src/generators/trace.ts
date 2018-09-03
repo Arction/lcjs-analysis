@@ -2,7 +2,7 @@ import { DataGenerator, CommonGeneratorOptions } from '../dataGenerator'
 import { Point } from '../dataHost'
 import { DataHost } from '../dataHost'
 
-export class Trace extends DataGenerator<Point, CommonGeneratorOptions> {
+export class TraceGenerator extends DataGenerator<Point, CommonGeneratorOptions> {
     constructor( args?: CommonGeneratorOptions ) {
         super( args )
     }
@@ -12,7 +12,7 @@ export class Trace extends DataGenerator<Point, CommonGeneratorOptions> {
      * @param numberOfPoints How many points of data to generate
      */
     setNumberOfPoints( numberOfPoints: number ) {
-        return new Trace( this.options ? { ...this.options, numberOfPoints } : { numberOfPoints } )
+        return new TraceGenerator( this.options ? { ...this.options, numberOfPoints } : { numberOfPoints } )
     }
 
     generator( args: CommonGeneratorOptions ) {
