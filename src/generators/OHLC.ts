@@ -98,7 +98,7 @@ export class OHLCGenerator extends DataGenerator<OHLCData, OHLCGeneratorOptions>
             genData.push( dataPoint )
         }
 
-        return Promise.resolve( new DataHost<OHLCData>( genData, this.infiniteReset ) )
+        return new DataHost<OHLCData>( Promise.resolve( genData ), this.infiniteReset )
     }
 
     infiniteReset( dataToReset: OHLCData, data: OHLCData[] ): OHLCData {

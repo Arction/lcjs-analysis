@@ -28,7 +28,7 @@ export class Trace extends DataGenerator<Point, CommonGeneratorOptions> {
             genData.push( point )
             previous = point
         }
-        return Promise.resolve( new DataHost<Point>( genData, this.infiniteReset ) )
+        return new DataHost<Point>( Promise.resolve( genData ), this.infiniteReset )
     }
 
     infiniteReset( dataToReset: Point, data: Point[] ): Point {

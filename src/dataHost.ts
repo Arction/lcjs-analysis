@@ -25,11 +25,12 @@ export type OHLCData = [number, number, number, number, number]
  * a stream or a promise.
  */
 export class DataHost<T> {
-    protected readonly data: T[]
+    protected data: Promise<T[]>
+    private resolvedData?: T[]
     private readonly infiniteResetHandler: ( dataToReset: T, data: T[] ) => T
     private streamOptions: StreamOptions
 
-    constructor( data: T[], infiniteResetHandler: ( dataToReset: T, data: T[] ) => T, streamOptions?: StreamOptions ) {
+    constructor( data: Promise<T[]>, infiniteResetHandler: ( dataToReset: T, data: T[] ) => T, streamOptions?: StreamOptions ) {
         this.data = data
         this.infiniteReset = this.infiniteReset.bind( this )
         this.infiniteResetHandler = infiniteResetHandler
@@ -47,7 +48,10 @@ export class DataHost<T> {
      */
     toStream(): Stream<T> {
         const stream = new Stream<T>( this.streamOptions, this.infiniteReset )
-        stream.push( this.data )
+        this.data.then( resolvedData => {
+            this.resolvedData = resolvedData
+            stream.push( resolvedData )
+        } )
         return stream
     }
 
@@ -56,7 +60,7 @@ export class DataHost<T> {
      * Consecutive calls always return a new instance of same data.
      */
     toPromise(): Promise<T[]> {
-        return Promise.resolve( this.data )
+        return this.data ? this.data : Promise.resolve( ( this.resolvedData ? this.resolvedData : [] ) )
     }
 
     /**
@@ -65,7 +69,7 @@ export class DataHost<T> {
      * @param data Data to reset
      */
     infiniteReset( data: T ): T {
-        return this.infiniteResetHandler( data, this.data )
+        return this.infiniteResetHandler( data, this.resolvedData || [] )
     }
 
     /**

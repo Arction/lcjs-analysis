@@ -16,7 +16,7 @@ export abstract class DataGenerator<T, K> {
     /**
      * Generate new instance of DataHost with unique data
      */
-    generate(): Promise<DataHost<T>> {
+    generate(): DataHost<T> {
         return this.generator( this.options || {} as K )
     }
 
@@ -25,7 +25,7 @@ export abstract class DataGenerator<T, K> {
      * Used to create the random data for the data host
      * @param args Generator arguments
      */
-    abstract generator( args: K ): Promise<DataHost<T>>
+    abstract generator( args: K ): DataHost<T>
 
     /**
      * Handles resetting the data when used as infinite stream of data.

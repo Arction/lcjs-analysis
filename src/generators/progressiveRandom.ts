@@ -99,7 +99,7 @@ export class ProgressiveRandom extends DataGenerator<Point, ProgressiveRandomOpt
             } )
         }
 
-        return Promise.resolve( new DataHost<Point>( data, this.infiniteReset ) )
+        return new DataHost<Point>( Promise.resolve( data ), this.infiniteReset )
     }
 
     infiniteReset( dataToReset: Point, data: Point[] ): Point {
