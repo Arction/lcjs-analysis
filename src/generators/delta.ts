@@ -1,14 +1,35 @@
 import { DataGenerator, CommonGeneratorOptions } from '../dataGenerator'
 import { Point, DataHost } from '../dataHost'
 
+/**
+ * Options for the Delta function generator.
+ */
 export interface DeltaFunctionOptions extends CommonGeneratorOptions {
+    /**
+     * How many points there has to be between spikes.
+     */
     minGap?: number,
+    /**
+     * How many points there can be between spikes.
+     */
     maxGap?: number,
+    /**
+     * The minium spike height.
+     */
     minAmplitude?: number,
+    /**
+     * The maximum spike height.
+     */
     maxAmplitude?: number,
+    /**
+     * The probability of a spike to generate on each step.
+     */
     probability?: number
 }
 
+/**
+ * A Delta function generator. Generates random spikes in otherwise flat data. Generated data is between 0 and 1.
+ */
 export class DeltaFunctionGenerator extends DataGenerator<Point, DeltaFunctionOptions> {
     constructor( args?: DeltaFunctionOptions ) {
         super( args )
@@ -16,10 +37,50 @@ export class DeltaFunctionGenerator extends DataGenerator<Point, DeltaFunctionOp
 
     /**
      * Returns a new Data generator with the new numberOfPoints.
-     * @param numberOfPoints How many points of data to generate
+     * @param numberOfPoints How many points of data to generate.
      */
     setNumberOfPoints( numberOfPoints: number ) {
         return new DeltaFunctionGenerator( this.options ? { ...this.options, numberOfPoints } : { numberOfPoints } )
+    }
+
+    /**
+     * Returns a new Data generator with the new minGap.
+     * @param minGap How many points there has to be between spikes.
+     */
+    setMinGap( minGap: number ) {
+        return new DeltaFunctionGenerator( this.options ? { ...this.options, minGap } : { minGap } )
+    }
+
+    /**
+     * Returns a new Data generator with the new maxGap.
+     * @param maxGap How many points there can be between spikes.
+     */
+    setMaxGap( maxGap: number ) {
+        return new DeltaFunctionGenerator( this.options ? { ...this.options, maxGap } : { maxGap } )
+    }
+
+    /**
+     * Returns a new Data generator with the new minAmplitude.
+     * @param minAmplitude The minium spike height.
+     */
+    setMinAmplitude( minAmplitude: number ) {
+        return new DeltaFunctionGenerator( this.options ? { ...this.options, minAmplitude } : { minAmplitude } )
+    }
+
+    /**
+     * Returns a new Data generator with the new maxAmplitude.
+     * @param maxAmplitude The maximum spike height.
+     */
+    setMaxAmplitude( maxAmplitude: number ) {
+        return new DeltaFunctionGenerator( this.options ? { ...this.options, maxAmplitude } : { maxAmplitude } )
+    }
+
+    /**
+     * Returns a new Data generator with the new probability.
+     * @param probability The probability of a spike to generate on each step.
+     */
+    setProbability( probability: number ) {
+        return new DeltaFunctionGenerator( this.options ? { ...this.options, probability } : { probability } )
     }
 
     generator( args: DeltaFunctionOptions ) {
