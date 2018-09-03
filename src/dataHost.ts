@@ -15,6 +15,12 @@ export interface Point {
 }
 
 /**
+ * OHLC data
+ * timestamp, open, high, low, close
+ */
+export type OHLCData = [number, number, number, number, number]
+
+/**
  * A base class for a data host that is capable to store the data and provide it as
  * a stream or a promise.
  */

@@ -5,6 +5,7 @@
 export { ProgressiveRandom } from './generators/progressiveRandom'
 export { ProgressiveTrace } from './generators/progressiveTrace'
 export { Trace } from './generators/trace'
+export { OHLCGenerator } from './generators/OHLC'
 export { Stream } from './stream'
 export { DataGenerator } from './dataGenerator'
 export { DataHost } from './dataHost'
