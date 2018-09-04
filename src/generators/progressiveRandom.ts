@@ -1,10 +1,14 @@
-import { DataGenerator, CommonGeneratorOptions } from '../dataGenerator'
+import { DataGenerator } from '../dataGenerator'
 import { Point, DataHost } from '../dataHost'
 
 /**
  * Options for the Progressive random data generator.
  */
-export interface ProgressiveRandomOptions extends CommonGeneratorOptions {
+export interface ProgressiveRandomOptions {
+    /**
+     * How many points of data to generate.
+     */
+    numberOfPoints?: number
     /**
      * How often to change the offset.
      */

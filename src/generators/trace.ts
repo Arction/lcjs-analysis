@@ -1,13 +1,23 @@
-import { DataGenerator, CommonGeneratorOptions } from '../dataGenerator'
+import { DataGenerator } from '../dataGenerator'
 import { Point } from '../dataHost'
 import { DataHost } from '../dataHost'
+
+/**
+ * Options for trace generator.
+ */
+export interface TraceGeneratorOptions {
+    /**
+     * How many points of data to generate.
+     */
+    numberOfPoints?: number
+}
 
 /**
  * A trace data generator.
  * Generates random points that can go to any direction from the previous point.
  */
-export class TraceGenerator extends DataGenerator<Point, CommonGeneratorOptions> {
-    constructor( args?: CommonGeneratorOptions ) {
+export class TraceGenerator extends DataGenerator<Point, TraceGeneratorOptions> {
+    constructor( args?: TraceGeneratorOptions ) {
         super( args )
     }
 
@@ -19,7 +29,7 @@ export class TraceGenerator extends DataGenerator<Point, CommonGeneratorOptions>
         return new TraceGenerator( this.options ? { ...this.options, numberOfPoints } : { numberOfPoints } )
     }
 
-    generator( args: CommonGeneratorOptions ) {
+    generator( args: TraceGeneratorOptions ) {
         const genData: Point[] = []
         const numberOfPoints = args.numberOfPoints || 10000
 

@@ -1,10 +1,14 @@
-import { DataGenerator, CommonGeneratorOptions } from '../dataGenerator'
+import { DataGenerator } from '../dataGenerator'
 import { Point, DataHost } from '../dataHost'
 
 /**
  * Options for the Delta function generator.
  */
-export interface DeltaFunctionOptions extends CommonGeneratorOptions {
+export interface DeltaFunctionOptions {
+    /**
+     * How many points of data to generate.
+     */
+    numberOfPoints?: number
     /**
      * How many points there has to be between spikes.
      */

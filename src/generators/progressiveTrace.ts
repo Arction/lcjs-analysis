@@ -1,12 +1,22 @@
-import { DataGenerator, CommonGeneratorOptions } from '../dataGenerator'
+import { DataGenerator } from '../dataGenerator'
 import { Point, DataHost } from '../dataHost'
+
+/**
+ * Options for progressive trace generator.
+ */
+export interface ProgressiveTraceGeneratorOptions {
+    /**
+     * How many points of data to generate.
+     */
+    numberOfPoints?: number
+}
 
 /**
  * A progressive trace data generator.
  * Generates point data that has progressive X axis. The data is always derived from the previous point.
  */
-export class ProgressiveTraceGenerator extends DataGenerator<Point, CommonGeneratorOptions> {
-    constructor( args?: CommonGeneratorOptions ) {
+export class ProgressiveTraceGenerator extends DataGenerator<Point, ProgressiveTraceGeneratorOptions> {
+    constructor( args?: ProgressiveTraceGeneratorOptions ) {
         super( args )
     }
 
@@ -18,7 +28,7 @@ export class ProgressiveTraceGenerator extends DataGenerator<Point, CommonGenera
         return new ProgressiveTraceGenerator( this.options ? { ...this.options, numberOfPoints } : { numberOfPoints } )
     }
 
-    generator( args: CommonGeneratorOptions ) {
+    generator( args: ProgressiveTraceGeneratorOptions ) {
         const genData: Point[] = []
         const numberOfPoints = args.numberOfPoints || 10000
 

@@ -1,11 +1,15 @@
-import { DataGenerator, CommonGeneratorOptions } from '../dataGenerator'
+import { DataGenerator } from '../dataGenerator'
 import { OHLCData } from '../dataHost'
 import { DataHost } from '../dataHost'
 
 /**
  * Options for the OHLC data generator
  */
-export interface OHLCGeneratorOptions extends CommonGeneratorOptions {
+export interface OHLCGeneratorOptions {
+    /**
+     * How many points of data to generate.
+     */
+    numberOfPoints?: number
     /**
      * Timestamp of the first data point.
      */

@@ -35,13 +35,3 @@ export abstract class DataGenerator<T, K> {
      */
     abstract infiniteReset( dataToReset: T, data: T[] ): T
 }
-
-/**
- * Options that are common to all generators.
- */
-export interface CommonGeneratorOptions {
-    /**
-     * How many points of data to generate.
-     */
-    numberOfPoints?: number
-}
