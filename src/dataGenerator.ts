@@ -1,4 +1,4 @@
-import { DataHost } from 'dataHost'
+import { DataHost } from './dataHost'
 
 /**
  * Abstract base class for all data generators.

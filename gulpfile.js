@@ -7,6 +7,8 @@ const rollupTypescript = require('rollup-plugin-typescript2')
 const rollupNodeResolve = require('rollup-plugin-node-resolve')
 const rollupCommonjs = require('rollup-plugin-commonjs')
 const rollupSourceMaps = require('rollup-plugin-sourcemaps')
+const clean = require('gulp-rimraf')
+const sequence = require('gulp-sequence')
 const pkg = require('./package.json')
 const watch = (paths, tasks) => () => gulp.watch(paths, tasks)
 const allFiles = ['src/**/*.ts', 'test/**/*.ts']
@@ -43,7 +45,10 @@ gulp
  */
 gulp
     .task('ci:watch', ['test', 'lint'], watch(allFiles, ['test', 'lint']))
-    .task('build', () => {
+    .task('clean', () => gulp.src(['dist'])
+        .pipe(clean())
+    )
+    .task('build:rollup', () => {
         return rollup.rollup({
             input: 'src/index.ts',
             plugins: [
@@ -77,4 +82,5 @@ gulp
                 })
             })
     })
+    .task('build', (cb) => sequence('clean', 'build:rollup', cb))
     .task('build:watch', ['build'], watch(allFiles, ['build']))
