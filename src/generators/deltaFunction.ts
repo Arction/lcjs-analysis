@@ -28,7 +28,8 @@ export interface DeltaFunctionOptions extends CommonGeneratorOptions {
 }
 
 /**
- * A Delta function generator. Generates random spikes in otherwise flat data. Generated data is between 0 and 1.
+ * A Delta function generator.
+ * Generates random spikes in otherwise flat data. Generated data is between 0 and 1.
  */
 export class DeltaFunctionGenerator extends DataGenerator<Point, DeltaFunctionOptions> {
     constructor( args?: DeltaFunctionOptions ) {
@@ -98,12 +99,14 @@ export class DeltaFunctionGenerator extends DataGenerator<Point, DeltaFunctionOp
             const value = { x: i, y: 0 }
             if ( sinceLast > minGap || minGap === -1 ) {
                 if ( sinceLast < maxGap || maxGap === -1 ) {
+                    // Create random spike randomly.
                     const doSpike = Math.random() > ( 1 - probability )
                     if ( doSpike ) {
                         value.y = Math.random() * ( maxAmplitude - minAmplitude ) + minAmplitude
                         lastSpike = i
                     }
                 } else if ( sinceLast >= maxGap ) {
+                    // Always create a spike if we are above the max gap.
                     value.y = Math.random() * ( maxAmplitude - minAmplitude ) + minAmplitude
                     lastSpike = i
                 }

@@ -24,6 +24,10 @@ export interface OHLCGeneratorOptions extends CommonGeneratorOptions {
     volatility?: number
 }
 
+/**
+ * OHLC data generator.
+ * Generates random OHLC data. The open value is derived from the previous close.
+ */
 export class OHLCGenerator extends DataGenerator<OHLCData, OHLCGeneratorOptions> {
     constructor( args?: OHLCGeneratorOptions ) {
         super( args )
@@ -88,6 +92,7 @@ export class OHLCGenerator extends DataGenerator<OHLCData, OHLCGeneratorOptions>
                 if ( prevPoint[4] + change < 0 ) {
                     change = change * -1
                 }
+                // All new points are derived from the last points closing value.
                 return prevPoint[4] + change
             } ).sort()
             if ( dir < 0 ) {

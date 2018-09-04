@@ -2,6 +2,10 @@ import { DataGenerator, CommonGeneratorOptions } from '../dataGenerator'
 import { Point } from '../dataHost'
 import { DataHost } from '../dataHost'
 
+/**
+ * A trace data generator.
+ * Generates random points that can go to any direction from the previous point.
+ */
 export class TraceGenerator extends DataGenerator<Point, CommonGeneratorOptions> {
     constructor( args?: CommonGeneratorOptions ) {
         super( args )

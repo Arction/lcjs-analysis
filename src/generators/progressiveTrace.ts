@@ -1,6 +1,10 @@
 import { DataGenerator, CommonGeneratorOptions } from '../dataGenerator'
 import { Point, DataHost } from '../dataHost'
 
+/**
+ * A progressive trace data generator.
+ * Generates point data that has progressive X axis. The data is always derived from the previous point.
+ */
 export class ProgressiveTraceGenerator extends DataGenerator<Point, CommonGeneratorOptions> {
     constructor( args?: CommonGeneratorOptions ) {
         super( args )

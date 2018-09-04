@@ -28,6 +28,9 @@ export interface ProgressiveRandomOptions extends CommonGeneratorOptions {
 
 /**
  * Progressive random data generator.
+ * Generates random points with progressive X axis.
+ * The data is offsetted by an random ammount. The data is random between the offset delta min and min + data max.
+ * Generated data is between 0 and 1.
  */
 export class ProgressiveRandomGenerator extends DataGenerator<Point, ProgressiveRandomOptions> {
     constructor( args?: ProgressiveRandomOptions ) {
