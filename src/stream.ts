@@ -69,7 +69,7 @@ export class Stream<T> {
      * -1 = infinite stream
      * -2 = until the end of data
      */
-    private batchesLeft: number = -1
+    private batchesLeft: number = -2
     /**
      * Handler used to check whether or not the stream should continue.
      */

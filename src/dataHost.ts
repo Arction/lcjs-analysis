@@ -38,7 +38,7 @@ export class DataHost<T> {
         this.streamOptions = {
             interval: streamOpts.interval || 1000,
             batchSize: streamOpts.batchSize || 10,
-            repeat: streamOpts.repeat !== undefined ? streamOpts.repeat : true
+            repeat: streamOpts.repeat !== undefined ? streamOpts.repeat : false
         }
     }
 
