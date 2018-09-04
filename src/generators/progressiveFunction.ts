@@ -17,6 +17,10 @@ export class ProgressiveFunctionGenerator extends DataGenerator<Point, Progressi
         super( args )
     }
 
+    /**
+     * Returns a new Progressive function generator with the new sampling function.
+     * @param handler A function that is sampled to generate the data.
+     */
     setSamplingFunction( handler: ( x: number ) => number ) {
         return new ProgressiveFunctionGenerator( this.options ?
             { ...this.options, samplingFunction: handler }
@@ -24,17 +28,29 @@ export class ProgressiveFunctionGenerator extends DataGenerator<Point, Progressi
             { samplingFunction: handler } )
     }
 
-    setSamplingCount( sampleCount: number ) {
+    /**
+     * Returns a new Progressive function generator with the new sample count.
+     * @param sampleCount How many samples to take from the function.
+     */
+    setSampleCount( sampleCount: number ) {
         return new ProgressiveFunctionGenerator( this.options ?
             { ...this.options, sampleCount }
             :
             { sampleCount } )
     }
 
+    /**
+     * Returns a new Progressive function generator with the new minX.
+     * @param minX Starting X value for the sampling.
+     */
     setMinX( minX: number ) {
         return new ProgressiveFunctionGenerator( this.options ? { ...this.options, minX } : { minX } )
     }
 
+    /**
+     * Returns a new Progressive function generator with the new maxX.
+     * @param maxX The value of X that is the last point sampled.
+     */
     setMaxX( maxX: number ) {
         return new ProgressiveFunctionGenerator( this.options ? { ...this.options, maxX } : { maxX } )
     }
@@ -48,10 +64,10 @@ export class ProgressiveFunctionGenerator extends DataGenerator<Point, Progressi
         const sampleCount = typeof args.sampleCount === 'number' ? args.sampleCount : 1
         const minX = typeof args.minX === 'number' ? args.minX : 0
         const maxX = typeof args.maxX === 'number' ? args.maxX : 100
-        const step = ( maxX - minX ) / ( sampleCount - 1 )
-
+        const nPoints = sampleCount - 1
+        const step = ( maxX - minX ) / ( nPoints )
         let x = minX
-        for ( let i = 0; i <= sampleCount; i++ ) {
+        for ( let i = 0; i <= nPoints; i++ ) {
             const point = {
                 x,
                 y: sampler( x )
