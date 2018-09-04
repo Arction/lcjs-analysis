@@ -48,10 +48,15 @@ export class DataHost<T> {
      */
     toStream(): Stream<T> {
         const stream = new Stream<T>( this.streamOptions, this.infiniteReset )
-        this.data.then( resolvedData => {
-            this.resolvedData = resolvedData
-            stream.push( resolvedData )
-        } )
+        if ( this.resolvedData ) {
+            stream.push( this.resolvedData )
+        } else {
+            this.data.then( resolvedData => {
+                this.resolvedData = resolvedData
+                this.data = Promise.resolve( this.resolvedData )
+                stream.push( resolvedData )
+            } )
+        }
         return stream
     }
 
@@ -60,7 +65,7 @@ export class DataHost<T> {
      * Consecutive calls always return a new instance of same data.
      */
     toPromise(): Promise<T[]> {
-        return this.data ? this.data : Promise.resolve( ( this.resolvedData ? this.resolvedData : [] ) )
+        return this.data
     }
 
     /**

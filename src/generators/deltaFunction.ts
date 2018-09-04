@@ -89,7 +89,7 @@ export class DeltaFunctionGenerator extends DataGenerator<Point, DeltaFunctionOp
         const numberOfPoints = args.numberOfPoints || 10000
         const minAmplitude = args.minAmplitude !== undefined ? Math.min( Math.max( args.minAmplitude, 0 ), 1 ) : 0.3
         const maxAmplitude = args.maxAmplitude !== undefined ? Math.max( Math.min( args.maxAmplitude, 1 ), 0 ) : 1
-        const minGap = args.minGap !== undefined ? args.minGap : -1
+        const minGap = args.minGap !== undefined ? args.minGap : 1
         const maxGap = args.maxGap !== undefined ? args.maxGap : -1
         const probability = args.probability !== undefined ? args.probability : 0.02
 

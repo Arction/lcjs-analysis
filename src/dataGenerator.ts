@@ -42,6 +42,9 @@ export abstract class DataGenerator<T, K> {
     abstract setNumberOfPoints( numberOfPoints: number ): DataGenerator<T, K>
 }
 
+/**
+ * Options that are common to all generators.
+ */
 export interface CommonGeneratorOptions {
     /**
      * How many points of data to generate.
