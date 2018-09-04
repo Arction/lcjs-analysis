@@ -57,10 +57,12 @@ export class ProgressiveFunctionGenerator extends DataGenerator<Point, Progressi
 
     generator( args: ProgressiveFunctionOptions ) {
         const genData: Point[] = []
+        let sampler
         if ( typeof args.samplingFunction !== 'function' ) {
-            throw new Error( 'A sampling function is required' )
+            sampler = ( X: number ) => Math.pow( X, 2 )
+        } else {
+            sampler = args.samplingFunction
         }
-        const sampler = args.samplingFunction
         const sampleCount = typeof args.sampleCount === 'number' ? args.sampleCount : 1
         const minX = typeof args.minX === 'number' ? args.minX : 0
         const maxX = typeof args.maxX === 'number' ? args.maxX : 100
