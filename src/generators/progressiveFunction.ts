@@ -1,10 +1,25 @@
 import { DataGenerator } from '../dataGenerator'
 import { Point, DataHost } from '../dataHost'
 
+/**
+ * Options for progressive function generator.
+ */
 export interface ProgressiveFunctionOptions {
+    /**
+     * A function that is sampled to generate the data.
+     */
     samplingFunction?: ( x: number ) => number,
+    /**
+     * How many samples to take.
+     */
     sampleCount?: number,
+    /**
+     * The minimum X value that the function is sampled with.
+     */
     minX?: number,
+    /**
+     * The maximum X value that the function is sampled with.
+     */
     maxX?: number
 }
 
