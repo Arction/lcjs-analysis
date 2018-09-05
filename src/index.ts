@@ -9,6 +9,7 @@ export { TraceGenerator } from './generators/trace'
 export { OHLCGenerator } from './generators/OHLC'
 export { DeltaFunctionGenerator } from './generators/deltaFunction'
 export { WhiteNoiseGenerator } from './generators/whiteNoise'
+export { SampledDataGenerator } from './generators/sampledData'
 
 export { Stream } from './stream'
 export { DataGenerator } from './dataGenerator'
