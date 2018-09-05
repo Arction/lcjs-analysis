@@ -12,7 +12,11 @@ export interface SampledDataGeneratorOptions<T> {
     /**
      * How often to sample the data. (Hz)
      */
-    samplingFrequency?: number
+    samplingFrequency?: number,
+    /**
+     * A constant step between sampling
+     */
+    step?: number
 }
 
 /**
@@ -54,14 +58,23 @@ export class SampledDataGenerator<T> extends DataGenerator<SampledPoint<T>, Samp
         return new SampledDataGenerator( this.options ? { ...this.options, samplingFrequency } : { samplingFrequency } )
     }
 
+    /**
+     * Returns a new Data generator with the new step.
+     * @param step A constant step between samplings.
+     */
+    setStep( step: number ) {
+        return new SampledDataGenerator( this.options ? { ...this.options, step } : { step } )
+    }
+
     generator( args: SampledDataGeneratorOptions<T> ) {
         const genData: SampledPoint<T>[] = []
         const inputData = args.inputData || []
         const interval = 1 / ( args.samplingFrequency || 10 )
+        const step = args.step || 0
 
         for ( let i = 0; i < inputData.length; i++ ) {
             const point: SampledPoint<T> = {
-                timestamp: i * interval,
+                timestamp: i * interval + i * step,
                 data: inputData[i]
             }
             genData.push( point )
