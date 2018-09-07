@@ -36,14 +36,15 @@ export abstract class DataGenerator<T, K> {
      * @param dataHost The data host to push the data to.
      */
     private generateChunks( baseIndex: number, total: number, dataHost: DataHost<T> ) {
-        let lastPoint = {} as T
         const startTime = Date.now()
+        const points = []
         // Generate data until elapsed time is more than 15 ms or we have generated enough data.
         for ( let i = 0; Date.now() - startTime < 15 && baseIndex < total; i++ ) {
             baseIndex++;
-            lastPoint = this.generator( baseIndex, lastPoint )
-            dataHost.push( lastPoint )
+            const point = this.generator( baseIndex )
+            points.push( point )
         }
+        dataHost.push( points )
         if ( baseIndex < total ) {
             const nextChunk = this.generateChunks.bind( this, baseIndex, total, dataHost )
             setTimeout( nextChunk, 0 )
@@ -60,9 +61,9 @@ export abstract class DataGenerator<T, K> {
     /**
      * Abstract function for all generators to override.
      * Used to create the random data for the data host.
-     * @param args Generator arguments
+     * @param index Index of the point to generate.
      */
-    abstract generator( index: number, lastPoint: T ): T
+    abstract generator( index: number ): T
 
     /**
      * Handles resetting the data when used as infinite stream of data.

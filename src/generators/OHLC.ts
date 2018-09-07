@@ -9,31 +9,41 @@ export interface OHLCGeneratorOptions {
     /**
      * How many points of data to generate.
      */
-    numberOfPoints?: number
+    numberOfPoints: number
     /**
      * Timestamp of the first data point.
      */
-    startTimestamp?: number,
+    startTimestamp: number,
     /**
      * How long time there is between two timestamps.
      */
-    dataFreq?: number,
+    dataFreq: number,
     /**
      * What is the value the data generation should start at.
      */
-    start?: number,
+    start: number,
     /**
      * How much the data can change.
      */
-    volatility?: number
+    volatility: number
+}
+
+export function createOHLCGenerator() {
+    return new OHLCGenerator( {
+        numberOfPoints: 1000,
+        startTimestamp: 0,
+        dataFreq: 1,
+        start: 100,
+        volatility: 0.1
+    } )
 }
 
 /**
  * OHLC data generator.
  * Generates random OHLC data. The open value is derived from the previous close.
  */
-export class OHLCGenerator extends DataGenerator<OHLCData, OHLCGeneratorOptions> {
-    constructor( args?: OHLCGeneratorOptions ) {
+class OHLCGenerator extends DataGenerator<OHLCData, OHLCGeneratorOptions> {
+    constructor( args: OHLCGeneratorOptions ) {
         super( args )
     }
 
@@ -42,72 +52,68 @@ export class OHLCGenerator extends DataGenerator<OHLCData, OHLCGeneratorOptions>
      * @param numberOfPoints How many points of data to generate
      */
     setNumberOfPoints( numberOfPoints: number ) {
-        return new OHLCGenerator( this.options ? { ...this.options, numberOfPoints } : { numberOfPoints } )
+        return new OHLCGenerator( { ...this.options, numberOfPoints } )
     }
 
     /**
      * Returns a new Data generator with the new time stamp to start generating the data.
      * @param startTimestamp The timestamp for the first data point.
      */
-    setStartTimestamp( startTimestamp?: number ) {
-        return new OHLCGenerator( this.options ? { ...this.options, startTimestamp } : { startTimestamp } )
+    setStartTimestamp( startTimestamp: number ) {
+        return new OHLCGenerator( { ...this.options, startTimestamp } )
     }
 
     /**
      * Returns a new Data generator with the new data frequency.
      * @param dataFreq How long the time between two timestamps is.
      */
-    setDataFrequency( dataFreq?: number ) {
-        return new OHLCGenerator( this.options ? { ...this.options, dataFreq } : { dataFreq } )
+    setDataFrequency( dataFreq: number ) {
+        return new OHLCGenerator( { ...this.options, dataFreq } )
     }
 
     /**
      * Returns a new Data generator with the new starting value.
      * @param start What is the value the data generation should start from.
      */
-    setStart( start?: number ) {
-        return new OHLCGenerator( this.options ? { ...this.options, start } : { start } )
+    setStart( start: number ) {
+        return new OHLCGenerator( { ...this.options, start } )
     }
 
     /**
      * Returns a new Data generator with the new volatility.
      * @param volatility How volatile the data is. How much the data changes between data points.
      */
-    setVolatility( volatility?: number ) {
-        return new OHLCGenerator( this.options ? { ...this.options, volatility } : { volatility } )
+    setVolatility( volatility: number ) {
+        return new OHLCGenerator( { ...this.options, volatility } )
     }
 
-    generator( args: OHLCGeneratorOptions ) {
-        const genData: OHLCData[] = []
-        const numberOfPoints = args.numberOfPoints || 60
-        const startTimeStamp = args.startTimestamp !== undefined ? args.startTimestamp : 0
-        const dataFreq = args.dataFreq || 1
-        const volatility = args.volatility || 0.1
-        const start = args.start || 10
+    /**
+     * Returns how many points of data the generator should generate.
+     */
+    getPointCount() {
+        return this.options.numberOfPoints
+    }
 
-        let prevPoint = [startTimeStamp, start, start, start, start]
-        for ( let i = 0; i < numberOfPoints; i++ ) {
-            let dataPoint: OHLCData = [0, 0, 0, 0, 0]
-            const timeStamp = ( startTimeStamp + dataFreq * i )
+    private prevPoint = [this.options.startTimestamp, this.options.start, this.options.start, this.options.start, this.options.start]
+    generator( i: number ) {
+        let dataPoint: OHLCData = [0, 0, 0, 0, 0]
+        const timeStamp = ( this.options.startTimestamp + this.options.dataFreq * i )
 
-            const dir = Math.random() > 0.5 ? 1 : -1
-            let newPoints = Array.from( Array( 4 ) ).map( v => {
-                let change = Math.random() * volatility * dir
-                if ( prevPoint[4] + change < 0 ) {
-                    change = change * -1
-                }
-                // All new points are derived from the last points closing value.
-                return prevPoint[4] + change
-            } ).sort()
-            if ( dir < 0 ) {
-                newPoints = [newPoints[0], newPoints[2], newPoints[1], newPoints[3]]
+        const dir = Math.random() > 0.5 ? 1 : -1
+        let newPoints = Array.from( Array( 4 ) ).map( v => {
+            let change = Math.random() * this.options.volatility * dir
+            if ( this.prevPoint[4] + change < 0 ) {
+                change = change * -1
             }
-            dataPoint = [timeStamp, newPoints[1], newPoints[3], newPoints[0], newPoints[2]]
-            prevPoint = dataPoint
-            genData.push( dataPoint )
+            // All new points are derived from the last points closing value.
+            return this.prevPoint[4] + change
+        } ).sort()
+        if ( dir < 0 ) {
+            newPoints = [newPoints[0], newPoints[2], newPoints[1], newPoints[3]]
         }
-
-        return new DataHost<OHLCData>( Promise.resolve( genData ), this.infiniteReset )
+        dataPoint = [timeStamp, newPoints[1], newPoints[3], newPoints[0], newPoints[2]]
+        this.prevPoint = dataPoint
+        return dataPoint
     }
 
     infiniteReset( dataToReset: OHLCData, data: OHLCData[] ): OHLCData {
