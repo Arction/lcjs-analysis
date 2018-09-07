@@ -8,15 +8,15 @@ export interface SampledDataGeneratorOptions<T> {
     /**
      * The input data to sample as per the sampling frequency.
      */
-    inputData?: T[],
+    inputData: T[],
     /**
      * How often to sample the data. (Hz)
      */
-    samplingFrequency?: number,
+    samplingFrequency: number,
     /**
      * A constant step between sampling
      */
-    step?: number
+    step: number
 }
 
 /**
@@ -34,12 +34,31 @@ export interface SampledPoint<T> {
 }
 
 /**
+ * Create a new Sampled data generator with default values.
+ * The generator samples the given input data array at specific frequency.
+ */
+export function createSampledDataGenerator<T>() {
+    return new SampledDataGenerator<T>( {
+        inputData: [],
+        samplingFrequency: 50,
+        step: 0
+    } )
+}
+
+/**
  * A sampled data generator.
  * Samples given data with specific frequency.
  */
-export class SampledDataGenerator<T> extends DataGenerator<SampledPoint<T>, SampledDataGeneratorOptions<T>> {
-    constructor( args?: SampledDataGeneratorOptions<T> ) {
+class SampledDataGenerator<T> extends DataGenerator<SampledPoint<T>, SampledDataGeneratorOptions<T>> {
+    private interval = 1 / ( this.options.samplingFrequency || 10 )
+    constructor( args: SampledDataGeneratorOptions<T> ) {
         super( args )
+        const opts = {
+            inputData: args.inputData,
+            samplingFrequency: args.samplingFrequency,
+            step: args.step
+        }
+        this.options = Object.freeze( opts )
     }
 
     /**
@@ -47,7 +66,7 @@ export class SampledDataGenerator<T> extends DataGenerator<SampledPoint<T>, Samp
      * @param inputData Array of data to sample.
      */
     setInputData( inputData: T[] ) {
-        return new SampledDataGenerator( this.options ? { ...this.options, inputData } : { inputData } )
+        return new SampledDataGenerator( { ...this.options, inputData } )
     }
 
     /**
@@ -55,7 +74,7 @@ export class SampledDataGenerator<T> extends DataGenerator<SampledPoint<T>, Samp
      * @param samplingFrequency Set the frequency that the data is sampled from the input array.
      */
     setSamplingFrequency( samplingFrequency: number ) {
-        return new SampledDataGenerator( this.options ? { ...this.options, samplingFrequency } : { samplingFrequency } )
+        return new SampledDataGenerator( { ...this.options, samplingFrequency } )
     }
 
     /**
@@ -63,23 +82,22 @@ export class SampledDataGenerator<T> extends DataGenerator<SampledPoint<T>, Samp
      * @param step A constant step between samplings.
      */
     setStep( step: number ) {
-        return new SampledDataGenerator( this.options ? { ...this.options, step } : { step } )
+        return new SampledDataGenerator( { ...this.options, step } )
     }
 
-    generator( args: SampledDataGeneratorOptions<T> ) {
-        const genData: SampledPoint<T>[] = []
-        const inputData = args.inputData || []
-        const interval = 1 / ( args.samplingFrequency || 10 )
-        const step = args.step || 0
+    /**
+     * Returns how many points of data the generator should generate.
+     */
+    getPointCount() {
+        return this.options.inputData.length
+    }
 
-        for ( let i = 0; i < inputData.length; i++ ) {
-            const point: SampledPoint<T> = {
-                timestamp: i * interval + i * step,
-                data: inputData[i]
-            }
-            genData.push( point )
+    generator( i: number ) {
+        const point: SampledPoint<T> = {
+            timestamp: i * this.interval + i * this.options.step,
+            data: this.options.inputData[i]
         }
-        return new DataHost<SampledPoint<T>>( Promise.resolve( genData ), this.infiniteReset )
+        return point
     }
 
     infiniteReset( dataToReset: SampledPoint<T>, data: SampledPoint<T>[] ): SampledPoint<T> {

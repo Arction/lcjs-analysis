@@ -9,7 +9,7 @@ export { createProgressiveFunctionGenerator } from './generators/progressiveFunc
 export { createOHLCGenerator } from './generators/OHLC'
 export { createDeltaFunctionGenerator } from './generators/deltaFunction'
 // export { WhiteNoiseGenerator } from './generators/whiteNoise'
-// export { SampledDataGenerator } from './generators/sampledData'
+export { createSampledDataGenerator } from './generators/sampledData'
 
 export { Stream } from './stream'
 export { DataGenerator } from './dataGenerator'

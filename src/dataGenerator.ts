@@ -40,8 +40,8 @@ export abstract class DataGenerator<T, K> {
         const points = []
         // Generate data until elapsed time is more than 15 ms or we have generated enough data.
         for ( let i = 0; Date.now() - startTime < 15 && baseIndex < total; i++ ) {
-            baseIndex++;
             const point = this.generator( baseIndex )
+            baseIndex++;
             points.push( point )
         }
         dataHost.push( points )
