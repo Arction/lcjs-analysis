@@ -1,6 +1,5 @@
 import { DataGenerator } from '../dataGenerator'
 import { Point } from '../dataHost'
-import { DataHost } from '../dataHost'
 
 /**
  * Options for trace generator.
@@ -9,16 +8,30 @@ export interface TraceGeneratorOptions {
     /**
      * How many points of data to generate.
      */
-    numberOfPoints?: number
+    numberOfPoints: number
+}
+
+/**
+ * Create a new Trace generator with default values.
+ * The generator creates random XY data where each point is based on previous point.
+ */
+export function createTraceGenerator() {
+    return new TraceGenerator( {
+        numberOfPoints: 1000
+    } )
 }
 
 /**
  * A trace data generator.
  * Generates random points that can go to any direction from the previous point.
  */
-export class TraceGenerator extends DataGenerator<Point, TraceGeneratorOptions> {
-    constructor( args?: TraceGeneratorOptions ) {
+class TraceGenerator extends DataGenerator<Point, TraceGeneratorOptions> {
+    constructor( args: TraceGeneratorOptions ) {
         super( args )
+        const opts = {
+            numberOfPoints: args.numberOfPoints
+        }
+        this.options = Object.freeze( opts )
     }
 
     /**
@@ -26,23 +39,24 @@ export class TraceGenerator extends DataGenerator<Point, TraceGeneratorOptions> 
      * @param numberOfPoints How many points of data to generate
      */
     setNumberOfPoints( numberOfPoints: number ) {
-        return new TraceGenerator( this.options ? { ...this.options, numberOfPoints } : { numberOfPoints } )
+        return new TraceGenerator( { ...this.options, numberOfPoints } )
     }
 
-    generator( args: TraceGeneratorOptions ) {
-        const genData: Point[] = []
-        const numberOfPoints = args.numberOfPoints || 10000
+    /**
+     * Returns how many points of data the generator should generate.
+     */
+    getPointCount() {
+        return this.options.numberOfPoints
+    }
 
-        let previous = { x: 0, y: 0 }
-        for ( let i = 0; i < numberOfPoints; i++ ) {
-            const point = {
-                x: previous.x + ( Math.random() - 0.5 ) * 2,
-                y: previous.y + ( Math.random() - 0.5 ) * 2
-            }
-            genData.push( point )
-            previous = point
+    private previous = { x: 0, y: 0 }
+    generator() {
+        const point = {
+            x: this.previous.x + ( Math.random() - 0.5 ) * 2,
+            y: this.previous.y + ( Math.random() - 0.5 ) * 2
         }
-        return new DataHost<Point>( Promise.resolve( genData ), this.infiniteReset )
+        this.previous = point
+        return point
     }
 
     infiniteReset( dataToReset: Point, data: Point[] ): Point {
