@@ -3,7 +3,7 @@
  */
 
 export { createProgressiveRandomGenerator } from './generators/progressiveRandom'
-// export { ProgressiveTraceGenerator } from './generators/progressiveTrace'
+export { createProgressiveTraceGenerator } from './generators/progressiveTrace'
 export { createProgressiveFunctionGenerator } from './generators/progressiveFunction'
 // export { TraceGenerator } from './generators/trace'
 export { createOHLCGenerator } from './generators/OHLC'
