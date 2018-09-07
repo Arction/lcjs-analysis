@@ -135,7 +135,7 @@ class ProgressiveRandomGenerator extends DataGenerator<Point, ProgressiveRandomO
         }
     }
 
-    infiniteReset( dataToReset: Point, data: ReadonlyArray<Point> ): Point {
+    infiniteReset( dataToReset: Point, data: Point[] ): Point {
         return { x: dataToReset.x + data.length, y: dataToReset.y }
     }
 }
