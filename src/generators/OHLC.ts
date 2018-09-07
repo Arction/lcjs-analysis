@@ -1,6 +1,5 @@
 import { DataGenerator } from '../dataGenerator'
 import { OHLCData } from '../dataHost'
-import { DataHost } from '../dataHost'
 
 /**
  * Options for the OHLC data generator

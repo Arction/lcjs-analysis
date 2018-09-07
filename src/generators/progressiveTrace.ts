@@ -1,5 +1,5 @@
 import { DataGenerator } from '../dataGenerator'
-import { Point, DataHost } from '../dataHost'
+import { Point } from '../dataHost'
 
 /**
  * Options for progressive trace generator.

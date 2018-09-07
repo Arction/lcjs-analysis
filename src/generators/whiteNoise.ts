@@ -1,6 +1,5 @@
 import { DataGenerator } from '../dataGenerator'
 import { Point } from '../dataHost'
-import { DataHost } from '../dataHost'
 
 /**
  * Options for White noise generator.

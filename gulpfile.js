@@ -10,6 +10,7 @@ const rollupSourceMaps = require('rollup-plugin-sourcemaps')
 const clean = require('gulp-rimraf')
 const sequence = require('gulp-sequence')
 const pkg = require('./package.json')
+const typedoc = require('gulp-typedoc')
 const watch = (paths, tasks) => () => gulp.watch(paths, tasks)
 const allFiles = ['src/**/*.ts', 'test/**/*.ts']
 /**
@@ -84,3 +85,22 @@ gulp
     })
     .task('build', (cb) => sequence('clean', 'build:rollup', cb))
     .task('build:watch', ['build'], watch(allFiles, ['build']))
+/**
+ * TypeDoc Tasks
+ */
+gulp
+    .task('docs', _ => {
+        gulp.src(['src/**/*.ts'])
+            .pipe(typedoc({
+                module: 'commonjs',
+                target: 'ES5',
+                excludeProtected: true,
+                excludePrivate: true,
+                excludeExternals: true,
+                out: 'docs/v0.0.0',
+                mode: 'file',
+                tsConfig: 'tsconfig.json',
+                name: 'XYData Generator',
+                hideGenerator: true
+            }))
+    })

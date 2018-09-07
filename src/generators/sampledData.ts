@@ -1,10 +1,9 @@
 import { DataGenerator } from '../dataGenerator'
-import { DataHost } from '../dataHost'
 
 /**
  * Options for Sampled data generator.
  */
-export interface SampledDataGeneratorOptions<T> {
+interface SampledDataGeneratorOptions<T> {
     /**
      * The input data to sample as per the sampling frequency.
      */
