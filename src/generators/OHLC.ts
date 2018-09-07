@@ -99,7 +99,7 @@ class OHLCGenerator extends DataGenerator<OHLCData, OHLCGeneratorOptions> {
     }
 
     private prevPoint = [this.options.startTimestamp, this.options.start, this.options.start, this.options.start, this.options.start]
-    generator( i: number ) {
+    generateDataPoint( i: number ) {
         let dataPoint: OHLCData = [0, 0, 0, 0, 0]
         const timeStamp = ( this.options.startTimestamp + this.options.dataFreq * i )
 

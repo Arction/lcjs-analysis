@@ -50,7 +50,7 @@ class WhiteNoiseGenerator extends DataGenerator<Point, WhiteNoiseGeneratorOption
         return this.options.numberOfPoints
     }
 
-    generator( i: number ) {
+    generateDataPoint( i: number ) {
         const point = {
             x: i,
             y: ( Math.random() - 0.5 ) * 2

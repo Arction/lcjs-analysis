@@ -122,7 +122,7 @@ class DeltaFunctionGenerator extends DataGenerator<Point, DeltaFunctionOptions> 
     }
 
     private lastSpike = 0
-    generator( i: number ) {
+    generateDataPoint( i: number ) {
         const sinceLast = i - this.lastSpike
         const value = { x: i, y: 0 }
         if ( sinceLast > this.options.minGap || this.options.minGap === -1 ) {

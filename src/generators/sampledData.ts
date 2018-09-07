@@ -92,7 +92,7 @@ class SampledDataGenerator<T> extends DataGenerator<SampledPoint<T>, SampledData
         return this.options.inputData.length
     }
 
-    generator( i: number ) {
+    generateDataPoint( i: number ) {
         const point: SampledPoint<T> = {
             timestamp: i * this.interval + i * this.options.step,
             data: this.options.inputData[i]

@@ -99,7 +99,7 @@ class ProgressiveFunctionGenerator extends DataGenerator<Point, ProgressiveFunct
         return this.numberOfPoints
     }
 
-    generator() {
+    generateDataPoint() {
         const point = {
             x: this.x,
             y: this.options.samplingFunction( this.x )

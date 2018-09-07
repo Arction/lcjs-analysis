@@ -51,7 +51,7 @@ class ProgressiveTraceGenerator extends DataGenerator<Point, ProgressiveTraceGen
     }
 
     private previousPoint = { x: 0, y: 0 }
-    generator( i: number ) {
+    generateDataPoint( i: number ) {
         const point = {
             x: i,
             y: this.previousPoint.y + ( Math.random() - 0.5 ) * 2

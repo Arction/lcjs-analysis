@@ -40,7 +40,7 @@ export abstract class DataGenerator<T, K> {
         const points = []
         // Generate data until elapsed time is more than 15 ms or we have generated enough data.
         for ( let i = 0; Date.now() - startTime < 15 && baseIndex < total; i++ ) {
-            const point = this.generator( baseIndex )
+            const point = this.generateDataPoint( baseIndex )
             baseIndex++;
             points.push( point )
         }
@@ -63,7 +63,7 @@ export abstract class DataGenerator<T, K> {
      * Used to create the random data for the data host.
      * @param index Index of the point to generate.
      */
-    abstract generator( index: number ): T
+    abstract generateDataPoint( index: number ): T
 
     /**
      * Handles resetting the data when used as infinite stream of data.

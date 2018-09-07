@@ -50,7 +50,7 @@ class TraceGenerator extends DataGenerator<Point, TraceGeneratorOptions> {
     }
 
     private previous = { x: 0, y: 0 }
-    generator() {
+    generateDataPoint() {
         const point = {
             x: this.previous.x + ( Math.random() - 0.5 ) * 2,
             y: this.previous.y + ( Math.random() - 0.5 ) * 2
