@@ -7,7 +7,7 @@ export { createProgressiveRandomGenerator } from './generators/progressiveRandom
 // export { ProgressiveFunctionGenerator } from './generators/progressiveFunction'
 // export { TraceGenerator } from './generators/trace'
 // export { OHLCGenerator } from './generators/OHLC'
-// export { DeltaFunctionGenerator } from './generators/deltaFunction'
+export { createDeltaFunctionGenerator } from './generators/deltaFunction'
 // export { WhiteNoiseGenerator } from './generators/whiteNoise'
 // export { SampledDataGenerator } from './generators/sampledData'
 
