@@ -31,6 +31,10 @@ export interface DeltaFunctionOptions {
     probability: number
 }
 
+/**
+ * Create a new Delta function generator with default values.
+ * The generator creates flat progressive data with random spikes.
+ */
 export function createDeltaFunctionGenerator() {
     return new DeltaFunctionGenerator( {
         numberOfPoints: 1000,

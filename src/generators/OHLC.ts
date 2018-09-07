@@ -28,6 +28,10 @@ export interface OHLCGeneratorOptions {
     volatility: number
 }
 
+/**
+ * Create a new OHLC data generator with default values.
+ * The generator creates random OHLC data.
+ */
 export function createOHLCGenerator() {
     return new OHLCGenerator( {
         numberOfPoints: 1000,
