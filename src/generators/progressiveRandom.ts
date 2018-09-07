@@ -1,5 +1,5 @@
 import { DataGenerator } from '../dataGenerator'
-import { Point, DataHost } from '../dataHost'
+import { Point } from '../dataHost'
 
 /**
  * Options for the Progressive random data generator.
@@ -8,26 +8,36 @@ export interface ProgressiveRandomOptions {
     /**
      * How many points of data to generate.
      */
-    numberOfPoints?: number
+    numberOfPoints: number
     /**
      * How often to change the offset.
      */
-    offsetStep?: number,
+    offsetStep: number,
     /**
      * Maximum change of the offset during one step.
      * Values higher than max are forced to max.
      */
-    offsetDeltaMax?: number,
+    offsetDeltaMax: number,
     /**
      * Minimum change of the offset during one step.
      * Values lower than min are forec to min.
      */
-    offsetDeltaMin?: number,
+    offsetDeltaMin: number,
     /**
      * Maximum value for the random data before addding the offset.
      * Values higher than max are forced to max.
      */
-    dataMax?: number
+    dataMax: number
+}
+
+export function createProgressiveRandomGenerator() {
+    return new ProgressiveRandomGenerator( {
+        numberOfPoints: 1000,
+        offsetStep: 10,
+        offsetDeltaMax: 0.3,
+        offsetDeltaMin: 0.1,
+        dataMax: 0.9
+    } )
 }
 
 /**
@@ -36,9 +46,19 @@ export interface ProgressiveRandomOptions {
  * The data is offsetted by an random ammount. The data is random between the offset delta min and min + data max.
  * Generated data is between 0 and 1.
  */
-export class ProgressiveRandomGenerator extends DataGenerator<Point, ProgressiveRandomOptions> {
-    constructor( args?: ProgressiveRandomOptions ) {
+class ProgressiveRandomGenerator extends DataGenerator<Point, ProgressiveRandomOptions> {
+    constructor( args: ProgressiveRandomOptions ) {
         super( args )
+
+        // Setup defaults
+        const opts = {
+            numberOfPoints: args.numberOfPoints,
+            offsetStep: args.offsetStep === 0 ? 0 : args.offsetStep,
+            offsetDeltaMax: Math.min( args.offsetDeltaMax, 1 ),
+            offsetDeltaMin: Math.max( args.offsetDeltaMin === 0 ? 0 : args.offsetDeltaMin, 0 ),
+            dataMax: Math.min( args.dataMax, 1 )
+        }
+        this.options = Object.freeze( opts )
     }
 
     /**
@@ -46,67 +66,58 @@ export class ProgressiveRandomGenerator extends DataGenerator<Point, Progressive
      * @param numberOfPoints How many points of data to generate
      */
     setNumberOfPoints( numberOfPoints: number ) {
-        return new ProgressiveRandomGenerator( this.options ? { ...this.options, numberOfPoints } : { numberOfPoints } )
+        return new ProgressiveRandomGenerator( { ...this.options, numberOfPoints } )
     }
     /**
      * Returns a new Data generator with the new offsetStep.
      * @param offsetStep How often to change the offset
      */
     setOffsetStep( offsetStep: number ) {
-        return new ProgressiveRandomGenerator( this.options ? { ...this.options, offsetStep } : { offsetStep } )
+        return new ProgressiveRandomGenerator( { ...this.options, offsetStep } )
     }
     /**
      * Returns a new Data generator with the new offsetDeltaMax.
      * @param offsetDeltaMax Maximum change of offset during one step.
      */
     setOffsetDeltaMax( offsetDeltaMax: number ) {
-        return new ProgressiveRandomGenerator( this.options ? { ...this.options, offsetDeltaMax } : { offsetDeltaMax } )
+        return new ProgressiveRandomGenerator( { ...this.options, offsetDeltaMax } )
     }
     /**
      * Returns a new Data generator with the new offsetDeltaMin.
      * @param offsetDeltaMin Minimum change of offset during one step.
      */
     setOffsetDeltaMin( offsetDeltaMin: number ) {
-        return new ProgressiveRandomGenerator( this.options ? { ...this.options, offsetDeltaMin } : { offsetDeltaMin } )
+        return new ProgressiveRandomGenerator( { ...this.options, offsetDeltaMin } )
     }
     /**
      * Returns a new Data generator with the new dataMax.
      * @param dataMax Maximum value for the random data before addding the offset.
      */
     setDataMax( dataMax: number ) {
-        return new ProgressiveRandomGenerator( this.options ? { ...this.options, dataMax } : { dataMax } )
+        return new ProgressiveRandomGenerator( { ...this.options, dataMax } )
     }
 
-    generator( args: ProgressiveRandomOptions ) {
-        const data: Point[] = []
+    getPointCount() {
+        return this.options.numberOfPoints
+    }
 
-        // Setup defaults
-        const points = args.numberOfPoints ? args.numberOfPoints : 1000
-        const offsetStep = args.offsetStep ? args.offsetStep === 0 ? 0 : args.offsetStep : Math.floor( points / 10 )
-        const offsetDeltaMax = Math.min( args.offsetDeltaMax ? args.offsetDeltaMax : 0.3, 1 )
-        const offsetDeltaMin = Math.max( args.offsetDeltaMin ? args.offsetDeltaMin === 0 ? 0 : args.offsetDeltaMin : 0.05, 0 )
-        const dataMax = Math.min( args.dataMax ? args.dataMax : 0.3, 1 )
-
-        let offset = 0.5
-        for ( let i = 0; i < points; i++ ) {
-            if ( i % offsetStep === 0 || i === 0 ) {
-                const newOffset = Math.random() * ( offsetDeltaMax - offsetDeltaMin ) + offsetDeltaMin
-                offset = Math.random() > 0.5 ? offset + newOffset : offset - newOffset
-            }
-            // Limit the offset so that data is newer lower than 0 or higher than 1
-            if ( offset + dataMax > 1 ) {
-                offset = 1 - dataMax
-            } else if ( offset < 0 ) {
-                offset = 0
-            }
-
-            data.push( {
-                x: i,
-                y: offset + Math.random() * dataMax
-            } )
+    private offset: number = 0.5
+    generator( i: number ) {
+        if ( i % this.options.offsetStep === 0 || i === 0 ) {
+            const newOffset = Math.random() * ( this.options.offsetDeltaMax - this.options.offsetDeltaMin ) + this.options.offsetDeltaMin
+            this.offset = Math.random() > 0.5 ? this.offset + newOffset : this.offset - newOffset
+        }
+        // Limit the offset so that data is newer lower than 0 or higher than 1
+        if ( this.offset + this.options.dataMax > 1 ) {
+            this.offset = 1 - this.options.dataMax
+        } else if ( this.offset < 0 ) {
+            this.offset = 0
         }
 
-        return new DataHost<Point>( Promise.resolve( data ), this.infiniteReset )
+        return {
+            x: i,
+            y: this.offset + Math.random() * this.options.dataMax
+        }
     }
 
     infiniteReset( dataToReset: Point, data: Point[] ): Point {
