@@ -27,13 +27,13 @@ export type OHLCData = [number, number, number, number, number]
 export class DataHost<T> {
     private data: T[] = []
     private derivativeDataHosts: DataHost<T>[] = []
-    protected frozenData?: ReadonlyArray<T>
-    private promisesToResolve: ( ( value?: ReadonlyArray<T> | PromiseLike<ReadonlyArray<T>> | undefined ) => void )[] = []
+    protected frozenData?: T[]
+    private promisesToResolve: ( ( value?: T[] | PromiseLike<T[]> | undefined ) => void )[] = []
     private streamsToPush: Stream<T>[] = []
-    private readonly infiniteResetHandler: ( dataToReset: T, data: ReadonlyArray<T> ) => T
+    private readonly infiniteResetHandler: ( dataToReset: T, data: T[] ) => T
     private streamOptions: Readonly<StreamOptions>
 
-    constructor( infiniteResetHandler: ( dataToReset: T, data: ReadonlyArray<T> ) => T, streamOptions: StreamOptions ) {
+    constructor( infiniteResetHandler: ( dataToReset: T, data: T[] ) => T, streamOptions: StreamOptions ) {
         this.infiniteReset = this.infiniteReset.bind( this )
         this.infiniteResetHandler = infiniteResetHandler
         const opts = {
@@ -62,12 +62,12 @@ export class DataHost<T> {
      * Returns the data as a promise.
      * Consecutive calls always return a new instance of same data.
      */
-    toPromise(): Promise<ReadonlyArray<T>> {
+    toPromise(): Promise<T[]> {
         let pr
         if ( this.frozenData ) {
             pr = Promise.resolve( this.frozenData )
         } else {
-            pr = new Promise<ReadonlyArray<T>>( resolve => { this.promisesToResolve.push( resolve ) } )
+            pr = new Promise<T[]>( resolve => { this.promisesToResolve.push( resolve ) } )
         }
         return pr
     }
@@ -78,17 +78,19 @@ export class DataHost<T> {
      * @param data Data to reset
      */
     infiniteReset( data: T ): T {
-        return this.infiniteResetHandler( data, this.frozenData ? this.frozenData : Object.freeze( [] ) )
+        return this.infiniteResetHandler( data, this.frozenData ? this.frozenData : [] )
     }
 
     /**
      * Push data to to the data host. Data is only accepted while the data host is not frozen.
      * @param data Data to add to the data host.
      */
-    push( data: T[] | T | ReadonlyArray<T> ) {
+    push( data: T[] | T ) {
         if ( !this.frozenData ) {
-            if ( Array.isArray( data ) || Object.isFrozen( data ) ) {
-                this.data = this.data.concat( data )
+            if ( Array.isArray( data ) ) {
+                for ( const d of data ) {
+                    this.data.push( d )
+                }
             } else {
                 this.data.push( data as T )
             }
@@ -96,17 +98,33 @@ export class DataHost<T> {
     }
 
     /**
+     * Set the data to use as data source. Discards old data.
+     * @param newData New data to use.
+     */
+    setData( newData: T[] ) {
+        this.data = newData
+    }
+
+    /**
      * Freeze the data host data.
      * After freezing the data the data can be accessed by toStream and toPromise.
      */
     freeze() {
-        this.frozenData = Object.freeze( this.data )
-        this.promisesToResolve.forEach( p => p( this.frozenData ) )
-        this.promisesToResolve = []
-        this.streamsToPush.forEach( s => s.push( this.frozenData || Object.freeze( [] ) ) )
-        this.streamsToPush = []
-        this.handleDerivativeDataHosts()
-        this.data = []
+        if ( !this.frozenData ) {
+            this.frozenData = this.data
+            setTimeout( () => {
+                this.promisesToResolve.forEach( p => p( this.frozenData ) )
+                this.promisesToResolve = []
+            }, 0 )
+            setTimeout( () => {
+                this.streamsToPush.forEach( s => s.push( this.frozenData || [] ) )
+                this.streamsToPush = []
+            }, 0 )
+            setTimeout( () => {
+                this.handleDerivativeDataHosts()
+            }, 0 )
+            this.data = []
+        }
     }
 
     /**
@@ -121,10 +139,10 @@ export class DataHost<T> {
      * Those data hosts should get same data as the base data host.
      */
     private handleDerivativeDataHosts() {
-        if ( this.frozenData ) {
+        if ( this.frozenData && this.derivativeDataHosts.length > 0 ) {
             this.derivativeDataHosts.forEach( host => {
                 if ( this.frozenData ) {
-                    host.push( this.frozenData )
+                    host.setData( this.frozenData )
                 }
                 host.freeze()
             } )

@@ -166,8 +166,12 @@ export class Stream<T> {
      * Push new data to the end of stream.
      * @param newData New data point
      */
-    push( newData: T | ReadonlyArray<T> ) {
-        this.data = this.data.concat( newData )
+    push( newData: T | T[] ) {
+        if ( Array.isArray( newData ) ) {
+            this.data = this.data.concat( newData )
+        } else {
+            this.data.push( newData )
+        }
         this.activateStream()
     }
 
