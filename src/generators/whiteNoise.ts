@@ -9,16 +9,30 @@ export interface WhiteNoiseGeneratorOptions {
     /**
      * How many points of data to generate.
      */
-    numberOfPoints?: number
+    numberOfPoints: number
+}
+
+/**
+ * Create a new White noise generator with default values.
+ * The generator creates white noise between -1 and 1.
+ */
+export function createWhiteNoiseGenerator() {
+    return new WhiteNoiseGenerator( {
+        numberOfPoints: 1000
+    } )
 }
 
 /**
  * A white noise data generator.
  * Generates white noise.
  */
-export class WhiteNoiseGenerator extends DataGenerator<Point, WhiteNoiseGeneratorOptions> {
-    constructor( args?: WhiteNoiseGeneratorOptions ) {
+class WhiteNoiseGenerator extends DataGenerator<Point, WhiteNoiseGeneratorOptions> {
+    constructor( args: WhiteNoiseGeneratorOptions ) {
         super( args )
+        const opts = {
+            numberOfPoints: args.numberOfPoints
+        }
+        this.options = Object.freeze( opts )
     }
 
     /**
@@ -29,18 +43,19 @@ export class WhiteNoiseGenerator extends DataGenerator<Point, WhiteNoiseGenerato
         return new WhiteNoiseGenerator( this.options ? { ...this.options, numberOfPoints } : { numberOfPoints } )
     }
 
-    generator( args: WhiteNoiseGeneratorOptions ) {
-        const genData: Point[] = []
-        const numberOfPoints = args.numberOfPoints || 10000
+    /**
+     * Returns how many points of data the generator should generate.
+     */
+    getPointCount() {
+        return this.options.numberOfPoints
+    }
 
-        for ( let i = 0; i < numberOfPoints; i++ ) {
-            const point = {
-                x: i,
-                y: ( Math.random() - 0.5 ) * 2
-            }
-            genData.push( point )
+    generator( i: number ) {
+        const point = {
+            x: i,
+            y: ( Math.random() - 0.5 ) * 2
         }
-        return new DataHost<Point>( Promise.resolve( genData ), this.infiniteReset )
+        return point
     }
 
     infiniteReset( dataToReset: Point, data: Point[] ): Point {
