@@ -8,28 +8,56 @@ export interface ProgressiveFunctionOptions {
     /**
      * A function that is sampled to generate the data.
      */
-    samplingFunction?: ( x: number ) => number,
+    samplingFunction: ( x: number ) => number,
     /**
      * How many samples to take.
      */
-    sampleCount?: number,
+    sampleCount: number,
     /**
      * The minimum X value that the function is sampled with.
      */
-    minX?: number,
+    minX: number,
     /**
      * The maximum X value that the function is sampled with.
      */
-    maxX?: number
+    maxX: number
+}
+
+/**
+ * Create a new Progressive Function generator with default values.
+ * The generator samples a given function x times between given X range.
+ */
+export function createProgressiveFunctionGenerator() {
+    return new ProgressiveFunctionGenerator( {
+        samplingFunction: ( x ) => x * x,
+        sampleCount: 100,
+        minX: 0,
+        maxX: 100
+    } )
 }
 
 /**
  * A progressive function data generator.
  * Generates point data that has progressive X axis and the value for Y axis is created from the user given function.
  */
-export class ProgressiveFunctionGenerator extends DataGenerator<Point, ProgressiveFunctionOptions> {
-    constructor( args?: ProgressiveFunctionOptions ) {
+class ProgressiveFunctionGenerator extends DataGenerator<Point, ProgressiveFunctionOptions> {
+    private readonly numberOfPoints: number
+    private readonly step: number
+    private x = this.options.minX
+    constructor( args: ProgressiveFunctionOptions ) {
         super( args )
+
+        const opts = {
+            samplingFunction: args.samplingFunction,
+            sampleCount: args.sampleCount,
+            minX: args.minX,
+            maxX: args.maxX
+        }
+
+        this.numberOfPoints = opts.sampleCount - 1
+        this.step = ( opts.maxX - opts.minX ) / this.numberOfPoints
+
+        this.options = Object.freeze( opts )
     }
 
     /**
@@ -37,10 +65,7 @@ export class ProgressiveFunctionGenerator extends DataGenerator<Point, Progressi
      * @param handler A function that is sampled to generate the data.
      */
     setSamplingFunction( handler: ( x: number ) => number ) {
-        return new ProgressiveFunctionGenerator( this.options ?
-            { ...this.options, samplingFunction: handler }
-            :
-            { samplingFunction: handler } )
+        return new ProgressiveFunctionGenerator( { ...this.options, samplingFunction: handler } )
     }
 
     /**
@@ -48,10 +73,7 @@ export class ProgressiveFunctionGenerator extends DataGenerator<Point, Progressi
      * @param sampleCount How many samples to take from the function.
      */
     setSampleCount( sampleCount: number ) {
-        return new ProgressiveFunctionGenerator( this.options ?
-            { ...this.options, sampleCount }
-            :
-            { sampleCount } )
+        return new ProgressiveFunctionGenerator( { ...this.options, sampleCount } )
     }
 
     /**
@@ -59,7 +81,7 @@ export class ProgressiveFunctionGenerator extends DataGenerator<Point, Progressi
      * @param minX Starting X value for the sampling.
      */
     setMinX( minX: number ) {
-        return new ProgressiveFunctionGenerator( this.options ? { ...this.options, minX } : { minX } )
+        return new ProgressiveFunctionGenerator( { ...this.options, minX } )
     }
 
     /**
@@ -67,35 +89,26 @@ export class ProgressiveFunctionGenerator extends DataGenerator<Point, Progressi
      * @param maxX The value of X that is the last point sampled.
      */
     setMaxX( maxX: number ) {
-        return new ProgressiveFunctionGenerator( this.options ? { ...this.options, maxX } : { maxX } )
+        return new ProgressiveFunctionGenerator( { ...this.options, maxX } )
     }
 
-    generator( args: ProgressiveFunctionOptions ) {
-        const genData: Point[] = []
-        let sampler
-        if ( typeof args.samplingFunction !== 'function' ) {
-            sampler = ( X: number ) => Math.pow( X, 2 )
-        } else {
-            sampler = args.samplingFunction
+    /**
+     * Returns how many points of data the generator should generate.
+     */
+    getPointCount() {
+        return this.numberOfPoints
+    }
+
+    generator() {
+        const point = {
+            x: this.x,
+            y: this.options.samplingFunction( this.x )
         }
-        const sampleCount = typeof args.sampleCount === 'number' ? args.sampleCount : 1
-        const minX = typeof args.minX === 'number' ? args.minX : 0
-        const maxX = typeof args.maxX === 'number' ? args.maxX : 100
-        const nPoints = sampleCount - 1
-        const step = ( maxX - minX ) / ( nPoints )
-        let x = minX
-        for ( let i = 0; i <= nPoints; i++ ) {
-            const point = {
-                x,
-                y: sampler( x )
-            }
-            x = x + step
-            if ( x > maxX ) {
-                x = maxX
-            }
-            genData.push( point )
+        this.x = this.x + this.step
+        if ( this.x > this.options.maxX ) {
+            this.x = this.options.maxX
         }
-        return new DataHost<Point>( Promise.resolve( genData ), this.infiniteReset )
+        return point
     }
 
     infiniteReset( dataToReset: Point, data: Point[] ): Point {

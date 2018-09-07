@@ -4,7 +4,7 @@
 
 export { createProgressiveRandomGenerator } from './generators/progressiveRandom'
 // export { ProgressiveTraceGenerator } from './generators/progressiveTrace'
-// export { ProgressiveFunctionGenerator } from './generators/progressiveFunction'
+export { createProgressiveFunctionGenerator } from './generators/progressiveFunction'
 // export { TraceGenerator } from './generators/trace'
 export { createOHLCGenerator } from './generators/OHLC'
 export { createDeltaFunctionGenerator } from './generators/deltaFunction'
