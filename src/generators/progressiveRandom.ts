@@ -30,13 +30,17 @@ export interface ProgressiveRandomOptions {
     dataMax: number
 }
 
+/**
+ * Create a new Progressive Random Generator with default values.
+ * The generator creates random data on Y-axis with progressive X-axis.
+ */
 export function createProgressiveRandomGenerator() {
     return new ProgressiveRandomGenerator( {
         numberOfPoints: 1000,
         offsetStep: 10,
         offsetDeltaMax: 0.3,
         offsetDeltaMin: 0.1,
-        dataMax: 0.9
+        dataMax: 0.5
     } )
 }
 
@@ -50,7 +54,7 @@ class ProgressiveRandomGenerator extends DataGenerator<Point, ProgressiveRandomO
     constructor( args: ProgressiveRandomOptions ) {
         super( args )
 
-        // Setup defaults
+        // Setup defaults and make sure args are valid
         const opts = {
             numberOfPoints: args.numberOfPoints,
             offsetStep: args.offsetStep === 0 ? 0 : args.offsetStep,
@@ -68,6 +72,7 @@ class ProgressiveRandomGenerator extends DataGenerator<Point, ProgressiveRandomO
     setNumberOfPoints( numberOfPoints: number ) {
         return new ProgressiveRandomGenerator( { ...this.options, numberOfPoints } )
     }
+
     /**
      * Returns a new Data generator with the new offsetStep.
      * @param offsetStep How often to change the offset
@@ -75,6 +80,7 @@ class ProgressiveRandomGenerator extends DataGenerator<Point, ProgressiveRandomO
     setOffsetStep( offsetStep: number ) {
         return new ProgressiveRandomGenerator( { ...this.options, offsetStep } )
     }
+
     /**
      * Returns a new Data generator with the new offsetDeltaMax.
      * @param offsetDeltaMax Maximum change of offset during one step.
@@ -82,6 +88,7 @@ class ProgressiveRandomGenerator extends DataGenerator<Point, ProgressiveRandomO
     setOffsetDeltaMax( offsetDeltaMax: number ) {
         return new ProgressiveRandomGenerator( { ...this.options, offsetDeltaMax } )
     }
+
     /**
      * Returns a new Data generator with the new offsetDeltaMin.
      * @param offsetDeltaMin Minimum change of offset during one step.
@@ -89,6 +96,7 @@ class ProgressiveRandomGenerator extends DataGenerator<Point, ProgressiveRandomO
     setOffsetDeltaMin( offsetDeltaMin: number ) {
         return new ProgressiveRandomGenerator( { ...this.options, offsetDeltaMin } )
     }
+
     /**
      * Returns a new Data generator with the new dataMax.
      * @param dataMax Maximum value for the random data before addding the offset.
@@ -97,11 +105,18 @@ class ProgressiveRandomGenerator extends DataGenerator<Point, ProgressiveRandomO
         return new ProgressiveRandomGenerator( { ...this.options, dataMax } )
     }
 
+    /**
+     * Returns how many points of data the generator should generate.
+     */
     getPointCount() {
         return this.options.numberOfPoints
     }
 
     private offset: number = 0.5
+    /**
+     * Generate a new Progressive random data point.
+     * @param i Index of point.
+     */
     generator( i: number ) {
         if ( i % this.options.offsetStep === 0 || i === 0 ) {
             const newOffset = Math.random() * ( this.options.offsetDeltaMax - this.options.offsetDeltaMin ) + this.options.offsetDeltaMin
@@ -120,7 +135,7 @@ class ProgressiveRandomGenerator extends DataGenerator<Point, ProgressiveRandomO
         }
     }
 
-    infiniteReset( dataToReset: Point, data: Point[] ): Point {
+    infiniteReset( dataToReset: Point, data: ReadonlyArray<Point> ): Point {
         return { x: dataToReset.x + data.length, y: dataToReset.y }
     }
 }

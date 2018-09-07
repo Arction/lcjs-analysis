@@ -9,23 +9,36 @@ export abstract class DataGenerator<T, K> {
      * Generator options
      */
     protected options: Readonly<K>
-    constructor( args?: K ) {
-        this.options = args || {} as K
+    constructor( args: K ) {
+        this.options = args
     }
 
     /**
-     * Generate new instance of DataHost with unique data
+     * Generate new instance of DataHost with unique data.
+     * Data is added to the DataHost asynchronously.
      */
     generate(): DataHost<T> {
-        const dataHost = new DataHost<T>( this.infiniteReset )
+        const dataHost = new DataHost<T>( this.infiniteReset, {
+            interval: 500,
+            batchSize: 10,
+            repeat: false
+        } )
         const points = this.getPointCount()
-        this.generateChunks( 0, points, dataHost )
+        const nextChunk = this.generateChunks.bind( this, 0, points, dataHost )
+        setTimeout( nextChunk, 0 )
         return dataHost
     }
 
+    /**
+     * Generate the random data in chunks that can take x ms per chunk.
+     * @param baseIndex The current index for the generator.
+     * @param total How many data points to generate.
+     * @param dataHost The data host to push the data to.
+     */
     private generateChunks( baseIndex: number, total: number, dataHost: DataHost<T> ) {
         let lastPoint = {} as T
         const startTime = Date.now()
+        // Generate data until elapsed time is more than 15 ms or we have generated enough data.
         for ( let i = 0; Date.now() - startTime < 15 && baseIndex < total; i++ ) {
             baseIndex++;
             lastPoint = this.generator( baseIndex, lastPoint )
@@ -46,7 +59,7 @@ export abstract class DataGenerator<T, K> {
 
     /**
      * Abstract function for all generators to override.
-     * Used to create the random data for the data host
+     * Used to create the random data for the data host.
      * @param args Generator arguments
      */
     abstract generator( index: number, lastPoint: T ): T
@@ -57,5 +70,5 @@ export abstract class DataGenerator<T, K> {
      * @param dataToReset Data to reset
      * @param data All of the data
      */
-    abstract infiniteReset( dataToReset: T, data: T[] ): T
+    abstract infiniteReset( dataToReset: T, data: ReadonlyArray<T> ): T
 }

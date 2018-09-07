@@ -28,20 +28,18 @@ export class DataHost<T> {
     private data: T[] = []
     private derivativeDataHosts: DataHost<T>[] = []
     protected frozenData?: ReadonlyArray<T>
-    private ready: boolean = false
-    private promisesToResolve: ( ( value?: T[] | PromiseLike<T[]> | undefined ) => void )[] = []
+    private promisesToResolve: ( ( value?: ReadonlyArray<T> | PromiseLike<ReadonlyArray<T>> | undefined ) => void )[] = []
     private streamsToPush: Stream<T>[] = []
-    private readonly infiniteResetHandler: ( dataToReset: T, data: T[] ) => T
+    private readonly infiniteResetHandler: ( dataToReset: T, data: ReadonlyArray<T> ) => T
     private streamOptions: Readonly<StreamOptions>
 
-    constructor( infiniteResetHandler: ( dataToReset: T, data: T[] ) => T, streamOptions?: StreamOptions ) {
+    constructor( infiniteResetHandler: ( dataToReset: T, data: ReadonlyArray<T> ) => T, streamOptions: StreamOptions ) {
         this.infiniteReset = this.infiniteReset.bind( this )
         this.infiniteResetHandler = infiniteResetHandler
-        const streamOpts = streamOptions || {}
         const opts = {
-            interval: streamOpts.interval || 1000,
-            batchSize: streamOpts.batchSize || 10,
-            repeat: streamOpts.repeat !== undefined ? streamOpts.repeat : false
+            interval: streamOptions.interval,
+            batchSize: streamOptions.batchSize,
+            repeat: streamOptions.repeat !== undefined ? streamOptions.repeat : false
         }
         this.streamOptions = Object.freeze( opts )
     }
@@ -52,7 +50,7 @@ export class DataHost<T> {
      */
     toStream(): Stream<T> {
         const stream = new Stream<T>( this.streamOptions, this.infiniteReset )
-        if ( this.ready && this.frozenData ) {
+        if ( this.frozenData ) {
             stream.push( this.frozenData )
         } else {
             this.streamsToPush.push( stream )
@@ -66,7 +64,7 @@ export class DataHost<T> {
      */
     toPromise(): Promise<ReadonlyArray<T>> {
         let pr
-        if ( this.ready && this.frozenData ) {
+        if ( this.frozenData ) {
             pr = Promise.resolve( this.frozenData )
         } else {
             pr = new Promise<ReadonlyArray<T>>( resolve => { this.promisesToResolve.push( resolve ) } )
@@ -80,11 +78,15 @@ export class DataHost<T> {
      * @param data Data to reset
      */
     infiniteReset( data: T ): T {
-        return this.infiniteResetHandler( data, this.data || [] )
+        return this.infiniteResetHandler( data, this.frozenData ? this.frozenData : Object.freeze( [] ) )
     }
 
+    /**
+     * Push data to to the data host. Data is only accepted while the data host is not frozen.
+     * @param data Data to add to the data host.
+     */
     push( data: T[] | T | ReadonlyArray<T> ) {
-        if ( !this.ready ) {
+        if ( !this.frozenData ) {
             if ( Array.isArray( data ) || Object.isFrozen( data ) ) {
                 this.data = this.data.concat( data )
             } else {
@@ -93,22 +95,33 @@ export class DataHost<T> {
         }
     }
 
+    /**
+     * Freeze the data host data.
+     * After freezing the data the data can be accessed by toStream and toPromise.
+     */
     freeze() {
-        this.promisesToResolve.forEach( p => p( this.data ) )
-        this.promisesToResolve = []
-        this.streamsToPush.forEach( s => s.push( this.data ) )
-        this.streamsToPush = []
-        this.ready = true
         this.frozenData = Object.freeze( this.data )
+        this.promisesToResolve.forEach( p => p( this.frozenData ) )
+        this.promisesToResolve = []
+        this.streamsToPush.forEach( s => s.push( this.frozenData || Object.freeze( [] ) ) )
+        this.streamsToPush = []
+        this.handleDerivativeDataHosts()
         this.data = []
     }
 
+    /**
+     * Return how many points of data this data host has.
+     */
     getPointCount() {
         return this.frozenData ? this.frozenData.length : 0
     }
 
+    /**
+     * Handle DataHosts that have been created based of this data host.
+     * Those data hosts should get same data as the base data host.
+     */
     private handleDerivativeDataHosts() {
-        if ( this.ready && this.frozenData ) {
+        if ( this.frozenData ) {
             this.derivativeDataHosts.forEach( host => {
                 if ( this.frozenData ) {
                     host.push( this.frozenData )
@@ -123,7 +136,7 @@ export class DataHost<T> {
      * Returns a new data host with the new interval and same data that the original host had.
      * @param interval New interval delay for the stream
      */
-    setStreamInterval( interval?: number ) {
+    setStreamInterval( interval: number ) {
         const dataHost = new DataHost<T>( this.infiniteResetHandler, { ...this.streamOptions, interval } )
         this.derivativeDataHosts.push( dataHost )
         this.handleDerivativeDataHosts()
@@ -134,7 +147,7 @@ export class DataHost<T> {
      * Returns a new data host with the new batch size and same data that the original host had.
      * @param batchSize New batch size for the stream
      */
-    setStreamBatchSize( batchSize?: number ) {
+    setStreamBatchSize( batchSize: number ) {
         const dataHost = new DataHost<T>( this.infiniteResetHandler, { ...this.streamOptions, batchSize } )
         this.derivativeDataHosts.push( dataHost )
         this.handleDerivativeDataHosts()
@@ -145,7 +158,7 @@ export class DataHost<T> {
      * Returns a new data host with the new repeat and same data that the original host had.
      * @param repeat New repeat for the stream
      */
-    setStreamRepeat( repeat?: boolean | number | StreamContinueHandler ) {
+    setStreamRepeat( repeat: boolean | number | StreamContinueHandler ) {
         const dataHost = new DataHost<T>( this.infiniteResetHandler, { ...this.streamOptions, repeat } )
         this.derivativeDataHosts.push( dataHost )
         this.handleDerivativeDataHosts()

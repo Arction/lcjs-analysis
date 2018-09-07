@@ -7,11 +7,11 @@ export interface StreamOptions {
     /**
      * How often the stream processes the data it has
      */
-    interval?: number,
+    interval: number,
     /**
      * How many elements of data is processed at same time
      */
-    batchSize?: number,
+    batchSize: number,
     /**
      * Set to true to repeat the stream infinitely.
      * Set to false to only continue until the stream has no data.
@@ -19,7 +19,7 @@ export interface StreamOptions {
      * Set to call back function to continue the stream until the callback returns false.
      * Leaving the value as undefined repeats the stream infinitely.
      */
-    repeat?: boolean | number | StreamContinueHandler
+    repeat: boolean | number | StreamContinueHandler
 }
 
 /**
