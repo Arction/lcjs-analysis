@@ -22,7 +22,6 @@ export interface ProgressiveFunctionOptions {
      */
     step: number
 }
-
 /**
  * Create a new Progressive Function generator with default values.
  * The generator samples a given function x times between given X range.
@@ -35,16 +34,6 @@ export function createProgressiveFunctionGenerator() {
         step: 1
     } )
 }
-
-createProgressiveFunctionGenerator()
-    .setSamplingFunction( Math.sin )
-    .setStart( 0 )
-    .setEnd( Math.PI * 2 )
-    .setStep( Math.PI * 2 / 100 )
-    .generate()
-    .toPromise()
-    .then( console.log )
-
 /**
  * A progressive function data generator.
  * Generates point data that has progressive X axis and the value for Y axis is created from the user given function.
