@@ -10,17 +10,17 @@ export interface ProgressiveFunctionOptions {
      */
     samplingFunction: ( x: number ) => number,
     /**
-     * How many samples to take.
+     * Start X-value.
      */
-    sampleCount: number,
+    start: number,
     /**
-     * The minimum X value that the function is sampled with.
+     * End X-value.
      */
-    minX: number,
+    end: number,
     /**
-     * The maximum X value that the function is sampled with.
+     * X-step between each continuous sample.
      */
-    maxX: number
+    step: number
 }
 
 /**
@@ -30,36 +30,45 @@ export interface ProgressiveFunctionOptions {
 export function createProgressiveFunctionGenerator() {
     return new ProgressiveFunctionGenerator( {
         samplingFunction: ( x ) => x * x,
-        sampleCount: 100,
-        minX: 0,
-        maxX: 100
+        start: 0,
+        end: 100,
+        step: 1
     } )
 }
+
+createProgressiveFunctionGenerator()
+    .setSamplingFunction( Math.sin )
+    .setStart( 0 )
+    .setEnd( Math.PI * 2 )
+    .setStep( Math.PI * 2 / 100 )
+    .generate()
+    .toPromise()
+    .then( console.log )
 
 /**
  * A progressive function data generator.
  * Generates point data that has progressive X axis and the value for Y axis is created from the user given function.
  */
 class ProgressiveFunctionGenerator extends DataGenerator<Point, ProgressiveFunctionOptions> {
+    private x = this.options.start
+    /**
+     * Number of points that generator is able to generate.
+     * Computed from start, end and step values.
+     */
     private readonly numberOfPoints: number
-    private readonly step: number
-    private x = this.options.minX
+
     constructor( args: ProgressiveFunctionOptions ) {
         super( args )
 
         const opts = {
             samplingFunction: args.samplingFunction,
-            sampleCount: args.sampleCount,
-            minX: args.minX,
-            maxX: args.maxX
+            start: args.start,
+            end: args.end,
+            step: args.step
         }
-
-        this.numberOfPoints = opts.sampleCount - 1
-        this.step = ( opts.maxX - opts.minX ) / this.numberOfPoints
-
         this.options = Object.freeze( opts )
+        this.numberOfPoints = Math.ceil( Math.abs( opts.end - opts.start ) / opts.step )
     }
-
     /**
      * Returns a new Progressive function generator with the new sampling function.
      * @param handler A function that is sampled to generate the data.
@@ -67,29 +76,26 @@ class ProgressiveFunctionGenerator extends DataGenerator<Point, ProgressiveFunct
     setSamplingFunction( handler: ( x: number ) => number ) {
         return new ProgressiveFunctionGenerator( { ...this.options, samplingFunction: handler } )
     }
-
     /**
-     * Returns a new Progressive function generator with the new sample count.
-     * @param sampleCount How many samples to take from the function.
+     * Returns a new Progressive function generator with the new start X-value.
+     * @param   start   Start X-value
      */
-    setSampleCount( sampleCount: number ) {
-        return new ProgressiveFunctionGenerator( { ...this.options, sampleCount } )
+    setStart( start: number ) {
+        return new ProgressiveFunctionGenerator( { ...this.options, start } )
     }
-
     /**
-     * Returns a new Progressive function generator with the new minX.
-     * @param minX Starting X value for the sampling.
+     * Returns a new Progressive function generator with the new end X-value.
+     * @param   end   End X-value
      */
-    setMinX( minX: number ) {
-        return new ProgressiveFunctionGenerator( { ...this.options, minX } )
+    setEnd( end: number ) {
+        return new ProgressiveFunctionGenerator( { ...this.options, end } )
     }
-
     /**
-     * Returns a new Progressive function generator with the new maxX.
-     * @param maxX The value of X that is the last point sampled.
+     * Returns a new Progressive function generator with the new X-step.
+     * @param   step   X-step between each continuous sample.
      */
-    setMaxX( maxX: number ) {
-        return new ProgressiveFunctionGenerator( { ...this.options, maxX } )
+    setStep( step: number ) {
+        return new ProgressiveFunctionGenerator( { ...this.options, step } )
     }
 
     /**
@@ -98,19 +104,14 @@ class ProgressiveFunctionGenerator extends DataGenerator<Point, ProgressiveFunct
     getPointCount() {
         return this.numberOfPoints
     }
-
     generateDataPoint() {
         const point = {
             x: this.x,
             y: this.options.samplingFunction( this.x )
         }
-        this.x = this.x + this.step
-        if ( this.x > this.options.maxX ) {
-            this.x = this.options.maxX
-        }
+        this.x = this.x + this.options.step
         return point
     }
-
     infiniteReset( dataToReset: Point, data: Point[] ): Point {
         return { x: dataToReset.x + data.length, y: dataToReset.y }
     }
