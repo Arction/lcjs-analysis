@@ -102,6 +102,6 @@ class ProgressiveFunctionGenerator extends DataGenerator<Point, ProgressiveFunct
         return point
     }
     infiniteReset( dataToReset: Point, data: Point[] ): Point {
-        return { x: dataToReset.x + data.length, y: dataToReset.y }
+        return { x: dataToReset.x + data.length * this.options.step, y: dataToReset.y }
     }
 }
