@@ -111,8 +111,9 @@ class OHLCGenerator extends DataGenerator<OHLCData, OHLCGeneratorOptions> {
             }
             // All new points are derived from the last points closing value.
             return this.prevPoint[4] + change
-        } ).sort()
-        if ( dir < 0 ) {
+        } ).sort( ( a, b ) => a - b )
+
+        if ( dir === -1 ) {
             newPoints = [newPoints[0], newPoints[2], newPoints[1], newPoints[3]]
         }
         dataPoint = [timeStamp, newPoints[1], newPoints[3], newPoints[0], newPoints[2]]
