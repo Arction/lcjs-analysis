@@ -85,6 +85,7 @@ class OHLCGenerator extends DataGenerator<OHLCData, OHLCGeneratorOptions> {
     /**
      * Returns a new Data generator with the new volatility.
      * @param volatility How volatile the data is. How much the data changes between data points.
+     *                   For example volatility of 0.2 would allow maximum of 0.2 change up or down between datapoints.
      */
     setVolatility( volatility: number ) {
         return new OHLCGenerator( { ...this.options, volatility } )
