@@ -1,11 +1,27 @@
 {
   "name": "xydata",
   "version": "1.0.0",
-  "description": "",
+  "description": "A random data generation library.",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
-  "iife": "dist/index.iife.js",
+  "browser": "dist/index.iife.js",
   "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/arction/xydata.git"
+  },
+  "author": "Arction",
+  "license": "MIT",
+  "keywords": [
+    "XY",
+    "data",
+    "generation",
+    "random"
+  ],
+  "bugs": {
+    "url": "https://gitlab.com/arction/xydata/issues"
+  },
+  "homepage": "https://gitlab.com/arction/xydata#README",
   "scripts": {
     "test": "gulp test:watch",
     "lint": "gulp lint:watch",
@@ -40,9 +56,5 @@
     "tslint": "^5.10.0",
     "typedoc": "^0.12.0",
     "typescript": "^2.9.2"
-  },
-  "bugs": {
-    "url": "https://gitlab.com/arction/xydata/issues"
-  },
-  "homepage": "https://gitlab.com/arction/xydata#README"
+  }
 }
