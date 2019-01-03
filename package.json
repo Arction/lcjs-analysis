@@ -4,7 +4,7 @@
   "description": "A random data generation library.",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
-  "browser": "dist/index.iife.js",
+  "iife": "dist/index.iife.js",
   "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
