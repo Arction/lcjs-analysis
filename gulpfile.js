@@ -75,7 +75,7 @@ gulp
                     name: 'xydata'
                 })
                 bundle.write({
-                    file: pkg.iife,
+                    file: pkg.browser,
                     format: 'iife',
                     exports: 'named',
                     sourcemap: true,
