@@ -33,6 +33,12 @@
     "docs": "gulp docs",
     "prepack": "npm install && gulp build"
   },
+  "files": [
+    "dist/**/*",
+    "LICENSE",
+    "package.json",
+    "README.md"
+  ],
   "devDependencies": {
     "@types/chai": "^4.1.4",
     "@types/mocha": "^5.2.4",

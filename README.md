@@ -2,7 +2,11 @@
 
 A data generator library.
 
-## Example
+## Installation
+
+`npm install --save xydata`
+
+## Getting started
 
 ```ts
 import { createProgressiveRandomGenerator } from 'xydata'
@@ -22,20 +26,27 @@ This creates a basic progressive random generator and uses the Stream API to out
 
 ## Project structure
 
-* **src**: Contains source code for the project.
-* **src/generators**: Contains all generators.
-* **test**: Contains tests for the project.
+| Folder | Description |
+|--------|-------------|
+| src    | project source code |
+| src/generators | the invidual generators |
+| test   | unit tests  |
 
-## Scripts
+## Development instructions
 
-Please run **npm install** before running any scripts.
+The project is developed on TypeScript. Build system of the project heavily rely on Node.js. Dependencies are managed by *npm*, therefore, remember to run **npm install** before starting of anything else. 
 
-##### (npm run [scriptName])
-  - **test**: Run tests and watch
-  - **lint**: Run lint and watch
-  - **ci:test**: Run tests once
-  - **ci:lint**: Run lint once
-  - **ci:watch**: Run test and lint, watch
-  - **build**: Build the library to dist/ folder
-  - **build:watch**: Build the library to dist/ folder and watch the source code for changes.
-  - **docs**: Build documentation to docs/ folder
+The project uses RollUp for creating the distributable library files.
+
+There are several *npm scripts*, which are used in development process:
+
+| Name     | Command          | Description              |
+| ---------|------------------|--------------------------|
+| test     | npm test         | run tests and watch      |
+| lint     | npm run lint     | run static analyzer and watch
+| ci:test  | npm run ci:test  | run tests once
+| ci:lint  | npm run ci:lint  | run static analyzer once
+| ci:watch | npm run ci:watch | run CI circle and watch
+| build    | npm run build    | build the library
+| build:watch| npm run build:watch | build the library and watch
+| docs     | npm run docs     | build documentation
