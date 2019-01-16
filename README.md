@@ -4,12 +4,12 @@ A data generator library.
 
 ## Installation
 
-`npm install --save xydata`
+`npm install --save @arction/xydata`
 
 ## Getting started
 
 ```ts
-import { createProgressiveRandomGenerator } from 'xydata'
+import { createProgressiveRandomGenerator } from '@arction/xydata'
 
 createProgressiveRandomGenerator()
     .setNumberOfPoints(1000)
