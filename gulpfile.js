@@ -100,7 +100,7 @@ gulp
                 out: 'docs/v0.0.0',
                 mode: 'file',
                 tsConfig: 'tsconfig.json',
-                name: 'XYData Generator',
+                name: 'XYData Generator API Documentation',
                 hideGenerator: true
             }))
     })
