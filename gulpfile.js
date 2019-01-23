@@ -7,6 +7,7 @@ const rollupTypescript = require('rollup-plugin-typescript2')
 const rollupNodeResolve = require('rollup-plugin-node-resolve')
 const rollupCommonjs = require('rollup-plugin-commonjs')
 const rollupSourceMaps = require('rollup-plugin-sourcemaps')
+const terser = require('gulp-terser')
 const clean = require('gulp-rimraf')
 const sequence = require('gulp-sequence')
 const pkg = require('./package.json')
@@ -59,31 +60,51 @@ gulp
                 rollupSourceMaps()
             ]
         })
-            .then(bundle => {
-                bundle.write({
-                    file: pkg.main,
-                    format: 'cjs',
-                    exports: 'named',
-                    sourcemap: true,
-                    name: 'xydata'
-                })
-                bundle.write({
-                    file: pkg.module,
-                    format: 'es',
-                    exports: 'named',
-                    sourcemap: true,
-                    name: 'xydata'
-                })
-                bundle.write({
-                    file: pkg.iife,
-                    format: 'iife',
-                    exports: 'named',
-                    sourcemap: true,
-                    name: 'xydata'
-                })
-            })
+            .then(bundle =>
+                Promise.all([
+                    bundle.write({
+                        file: pkg.main,
+                        format: 'cjs',
+                        exports: 'named',
+                        sourcemap: true,
+                        name: 'xydata'
+                    }),
+                    bundle.write({
+                        file: pkg.module,
+                        format: 'es',
+                        exports: 'named',
+                        sourcemap: true,
+                        name: 'xydata'
+                    }),
+                    bundle.write({
+                        file: pkg.iife,
+                        format: 'iife',
+                        exports: 'named',
+                        sourcemap: true,
+                        name: 'xydata'
+                    })
+                ])
+            )
     })
-    .task('build', (cb) => sequence('clean', 'build:rollup', cb))
+    .task('build:terser', () =>
+        gulp.src([pkg.iife])
+            .pipe(terser({
+                mangle: {
+                    toplevel: true,
+                    reserved: [
+                        'xydata'
+                    ],
+                    properties: {
+                        regex: /\b_\w*/,
+                        keep_quoted: true
+                    }
+                },
+                keep_classnames: false,
+                keep_fnames: false
+            }))
+            .pipe(gulp.dest('dist'))
+    )
+    .task('build', (cb) => sequence('clean', 'build:rollup', 'build:terser', cb))
     .task('build:watch', ['build'], watch(allFiles, ['build']))
 /**
  * TypeDoc Tasks
@@ -100,7 +121,7 @@ gulp
                 out: 'docs/v0.0.0',
                 mode: 'file',
                 tsConfig: 'tsconfig.json',
-                name: 'XYData Generator',
+                name: 'XYData Generator API Documentation',
                 hideGenerator: true
             }))
     })
