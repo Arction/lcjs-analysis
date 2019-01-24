@@ -177,7 +177,7 @@ export class Stream<T> {
 
     /**
      * Maps the stream of data.
-     * @param handler A function that works just like a normal array.map handler
+     * @param handler A function that works just like a normal JavaScript Array.prototype.map handler.
      * @returns A new stream with the data mapped by the handler.
      */
     map( handler: ( value: T, index: number, array: T[] ) => T ) {
@@ -203,7 +203,7 @@ export class Stream<T> {
 
     /**
      * Calls the handler for each element of the stream.
-     * @param handler A function that works just like a normal array.forEach handler.
+     * @param handler A function that works just like a normal JavaScript Array.prototype.forEach handler.
      */
     forEach( handler: ( value: T, index: number, array: T[] ) => void ) {
         this.forEachHandler = handler

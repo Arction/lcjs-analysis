@@ -11,18 +11,39 @@ A data generator library.
 ```ts
 import { createProgressiveRandomGenerator } from '@arction/xydata'
 
+// create new instance of progressive random generator
 createProgressiveRandomGenerator()
+    // define that 1000 points should be generated
     .setNumberOfPoints(1000)
+    // generate those 1000 points
     .generate()
+    // set stream to progress every 250 milliseconds
     .setStreamInterval(250)
+    // set stream to output 10 points at a time
     .setStreamBatchSize(10)
+    // make the stream infinite
     .setStreamRepeat(true)
+    // create a new stream with previously defined stream settings
     .toStream()
+    // every time the stream outputs data, run this function on each of the data points
     .forEach(data=>{
         console.log(data)
     })
 ```
 This creates a basic progressive random generator and uses the Stream API to output the data to console.
+
+## Generators
+
+| Generator | Description |
+|-----------|-------------|
+| Delta Function | Generate mostly flat data with random spikes. |
+| OHLC | Generate Open, High, Low, Close data. |
+| Progressive Function | Sample a user defined function with given X step. |
+| Progressive Random | Generate random progressive data that has progessive X step. |
+| Progressive Trace | Generate random trace data from previous point that has progressive X step. |
+| Sample Data | Sample given array with specified frequency and user defined step. |
+| Trace | Generate random trace data that can go to any direction on the XY coordinates. |
+| White Noise | Generate white noise. |
 
 ## Project structure
 
@@ -34,7 +55,7 @@ This creates a basic progressive random generator and uses the Stream API to out
 
 ## Development instructions
 
-The project is developed on TypeScript. Build system of the project heavily rely on Node.js. Dependencies are managed by *npm*, therefore, remember to run **npm install** before starting of anything else. 
+The project is developed using TypeScript. Build system of the project heavily relies on Node.js. Dependencies are managed with *npm*, therefore, remember to run **npm install** before starting of anything else. 
 
 The project uses RollUp for creating the distributable library files.
 
