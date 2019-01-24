@@ -24,6 +24,7 @@ export interface StreamOptions {
 
 /**
  * Data stream.
+ * @param T The type of the streamed data.
  */
 export class Stream<T> {
     /**
