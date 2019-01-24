@@ -47,7 +47,7 @@ export function createProgressiveRandomGenerator() {
 /**
  * Progressive random data generator.
  * Generates random points with progressive X axis.
- * The data is offsetted by an random ammount. The data is random between the offset delta min and min + data max.
+ * The data is offset by an random ammount. The data is random between the offset delta min and min + data max.
  * Generated data is between 0 and 1.
  */
 class ProgressiveRandomGenerator extends DataGenerator<Point, ProgressiveRandomOptions> {

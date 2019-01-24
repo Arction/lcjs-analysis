@@ -23,6 +23,7 @@ export type OHLCData = [number, number, number, number, number]
 /**
  * A base class for a data host that is capable to store the data and provide it as
  * a stream or a promise.
+ * @param T Data type of the hosted data
  */
 export class DataHost<T> {
     private data: T[] = []

@@ -20,6 +20,7 @@ interface SampledDataGeneratorOptions<T> {
 
 /**
  * Structure for the sampled point.
+ * @param T Data type for the data that the generator samples.
  */
 export interface SampledPoint<T> {
     /**
@@ -35,6 +36,7 @@ export interface SampledPoint<T> {
 /**
  * Create a new Sampled data generator with default values.
  * The generator samples the given input data array at specific frequency.
+ * @param T Data type for the data that the generator samples.
  */
 export function createSampledDataGenerator<T>() {
     return new SampledDataGenerator<T>( {
@@ -47,6 +49,7 @@ export function createSampledDataGenerator<T>() {
 /**
  * A sampled data generator.
  * Samples given data with specific frequency.
+ * @param T Data type for the data that the generator samples.
  */
 class SampledDataGenerator<T> extends DataGenerator<SampledPoint<T>, SampledDataGeneratorOptions<T>> {
     private interval = 1 / ( this.options.samplingFrequency || 10 )
