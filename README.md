@@ -32,6 +32,8 @@ createProgressiveRandomGenerator()
 ```
 This creates a basic progressive random generator and uses the Stream API to output the data to console.
 
+> Note: You should newer create a new instance of any generator using the `new` keyword. Generators should only be created with the `create...` functions.
+
 ## Generators
 
 | Generator | Description |
