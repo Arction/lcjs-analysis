@@ -46,12 +46,12 @@ class ProgressiveTraceGenerator extends DataGenerator<Point, ProgressiveTraceGen
     /**
      * Returns how many points of data the generator should generate.
      */
-    getPointCount() {
+    protected getPointCount() {
         return this.options.numberOfPoints
     }
 
     private previousPoint = { x: 0, y: 0 }
-    generateDataPoint( i: number ) {
+    protected generateDataPoint( i: number ) {
         const point = {
             x: i,
             y: this.previousPoint.y + ( Math.random() - 0.5 ) * 2
@@ -60,7 +60,7 @@ class ProgressiveTraceGenerator extends DataGenerator<Point, ProgressiveTraceGen
         return point
     }
 
-    infiniteReset( dataToReset: Point, data: Point[] ): Point {
+    protected infiniteReset( dataToReset: Point, data: Point[] ): Point {
         return { x: dataToReset.x + data.length, y: dataToReset.y }
     }
 }

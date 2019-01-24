@@ -94,12 +94,12 @@ class OHLCGenerator extends DataGenerator<OHLCData, OHLCGeneratorOptions> {
     /**
      * Returns how many points of data the generator should generate.
      */
-    getPointCount() {
+    protected getPointCount() {
         return this.options.numberOfPoints
     }
 
     private prevPoint = [this.options.startTimestamp, this.options.start, this.options.start, this.options.start, this.options.start]
-    generateDataPoint( i: number ) {
+    protected generateDataPoint( i: number ) {
         let dataPoint: OHLCData = [0, 0, 0, 0, 0]
         const timeStamp = ( this.options.startTimestamp + this.options.dataFreq * i )
 
@@ -121,7 +121,7 @@ class OHLCGenerator extends DataGenerator<OHLCData, OHLCGeneratorOptions> {
         return dataPoint
     }
 
-    infiniteReset( dataToReset: OHLCData, data: OHLCData[] ): OHLCData {
+    protected infiniteReset( dataToReset: OHLCData, data: OHLCData[] ): OHLCData {
         // base + end-base + point1-point0
         const newPoint = <OHLCData>[
             dataToReset[0] + data.length * ( data[data.length - 1][0] - data[data.length - 2][0] ),

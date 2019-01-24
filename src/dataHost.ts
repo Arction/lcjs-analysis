@@ -77,7 +77,7 @@ export class DataHost<T> {
      * Used to recalculate the point when it is moved to end of stream.
      * @param data Data to reset
      */
-    infiniteReset( data: T ): T {
+    private infiniteReset( data: T ): T {
         return this.infiniteResetHandler( data, this.frozenData ? this.frozenData : [] )
     }
 

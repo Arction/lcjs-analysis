@@ -87,11 +87,11 @@ class SampledDataGenerator<T> extends DataGenerator<SampledPoint<T>, SampledData
     /**
      * Returns how many points of data the generator should generate.
      */
-    getPointCount() {
+    protected getPointCount() {
         return this.options.inputData.length
     }
 
-    generateDataPoint( i: number ) {
+    protected generateDataPoint( i: number ) {
         const point: SampledPoint<T> = {
             timestamp: i * this.interval + i * this.options.step,
             data: this.options.inputData[i]
@@ -99,7 +99,7 @@ class SampledDataGenerator<T> extends DataGenerator<SampledPoint<T>, SampledData
         return point
     }
 
-    infiniteReset( dataToReset: SampledPoint<T>, data: SampledPoint<T>[] ): SampledPoint<T> {
+    protected infiniteReset( dataToReset: SampledPoint<T>, data: SampledPoint<T>[] ): SampledPoint<T> {
         return dataToReset
     }
 }

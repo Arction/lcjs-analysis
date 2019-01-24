@@ -45,11 +45,11 @@ class WhiteNoiseGenerator extends DataGenerator<Point, WhiteNoiseGeneratorOption
     /**
      * Returns how many points of data the generator should generate.
      */
-    getPointCount() {
+    protected getPointCount() {
         return this.options.numberOfPoints
     }
 
-    generateDataPoint( i: number ) {
+    protected generateDataPoint( i: number ) {
         const point = {
             x: i,
             y: ( Math.random() - 0.5 ) * 2
@@ -57,7 +57,7 @@ class WhiteNoiseGenerator extends DataGenerator<Point, WhiteNoiseGeneratorOption
         return point
     }
 
-    infiniteReset( dataToReset: Point, data: Point[] ): Point {
+    protected infiniteReset( dataToReset: Point, data: Point[] ): Point {
         return { x: dataToReset.x + data[data.length - 1].x, y: dataToReset.y + data[data.length - 1].y }
     }
 }

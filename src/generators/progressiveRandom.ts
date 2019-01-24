@@ -108,7 +108,7 @@ class ProgressiveRandomGenerator extends DataGenerator<Point, ProgressiveRandomO
     /**
      * Returns how many points of data the generator should generate.
      */
-    getPointCount() {
+    protected getPointCount() {
         return this.options.numberOfPoints
     }
 
@@ -117,7 +117,7 @@ class ProgressiveRandomGenerator extends DataGenerator<Point, ProgressiveRandomO
      * Generate a new Progressive random data point.
      * @param i Index of point.
      */
-    generateDataPoint( i: number ) {
+    protected generateDataPoint( i: number ) {
         if ( i % this.options.offsetStep === 0 || i === 0 ) {
             const newOffset = Math.random() * ( this.options.offsetDeltaMax - this.options.offsetDeltaMin ) + this.options.offsetDeltaMin
             this.offset = Math.random() > 0.5 ? this.offset + newOffset : this.offset - newOffset
@@ -135,7 +135,7 @@ class ProgressiveRandomGenerator extends DataGenerator<Point, ProgressiveRandomO
         }
     }
 
-    infiniteReset( dataToReset: Point, data: Point[] ): Point {
+    protected infiniteReset( dataToReset: Point, data: Point[] ): Point {
         return { x: dataToReset.x + data.length, y: dataToReset.y }
     }
 }
