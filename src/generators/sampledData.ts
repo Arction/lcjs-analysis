@@ -103,6 +103,6 @@ class SampledDataGenerator<T> extends DataGenerator<SampledPoint<T>, SampledData
     }
 
     protected infiniteReset( dataToReset: SampledPoint<T>, data: SampledPoint<T>[] ): SampledPoint<T> {
-        return dataToReset
+        return { timestamp: dataToReset.timestamp + data[data.length - 1].timestamp, data: dataToReset.data }
     }
 }
