@@ -45,12 +45,12 @@ class TraceGenerator extends DataGenerator<Point, TraceGeneratorOptions> {
     /**
      * Returns how many points of data the generator should generate.
      */
-    getPointCount() {
+    protected getPointCount() {
         return this.options.numberOfPoints
     }
 
     private previous = { x: 0, y: 0 }
-    generateDataPoint() {
+    protected generateDataPoint() {
         const point = {
             x: this.previous.x + ( Math.random() - 0.5 ) * 2,
             y: this.previous.y + ( Math.random() - 0.5 ) * 2
@@ -59,7 +59,7 @@ class TraceGenerator extends DataGenerator<Point, TraceGeneratorOptions> {
         return point
     }
 
-    infiniteReset( dataToReset: Point, data: Point[] ): Point {
+    protected infiniteReset( dataToReset: Point, data: Point[] ): Point {
         return { x: dataToReset.x + data[data.length - 1].x, y: dataToReset.y + data[data.length - 1].y }
     }
 }

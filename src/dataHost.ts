@@ -23,6 +23,7 @@ export type OHLCData = [number, number, number, number, number]
 /**
  * A base class for a data host that is capable to store the data and provide it as
  * a stream or a promise.
+ * @param T Data type of the hosted data
  */
 export class DataHost<T> {
     private data: T[] = []
@@ -77,7 +78,7 @@ export class DataHost<T> {
      * Used to recalculate the point when it is moved to end of stream.
      * @param data Data to reset
      */
-    infiniteReset( data: T ): T {
+    private infiniteReset( data: T ): T {
         return this.infiniteResetHandler( data, this.frozenData ? this.frozenData : [] )
     }
 

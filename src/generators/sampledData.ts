@@ -20,6 +20,7 @@ interface SampledDataGeneratorOptions<T> {
 
 /**
  * Structure for the sampled point.
+ * @param T Data type for the data that the generator samples.
  */
 export interface SampledPoint<T> {
     /**
@@ -35,6 +36,7 @@ export interface SampledPoint<T> {
 /**
  * Create a new Sampled data generator with default values.
  * The generator samples the given input data array at specific frequency.
+ * @param T Data type for the data that the generator samples.
  */
 export function createSampledDataGenerator<T>() {
     return new SampledDataGenerator<T>( {
@@ -47,6 +49,7 @@ export function createSampledDataGenerator<T>() {
 /**
  * A sampled data generator.
  * Samples given data with specific frequency.
+ * @param T Data type for the data that the generator samples.
  */
 class SampledDataGenerator<T> extends DataGenerator<SampledPoint<T>, SampledDataGeneratorOptions<T>> {
     private interval = 1 / ( this.options.samplingFrequency || 10 )
@@ -87,11 +90,11 @@ class SampledDataGenerator<T> extends DataGenerator<SampledPoint<T>, SampledData
     /**
      * Returns how many points of data the generator should generate.
      */
-    getPointCount() {
+    protected getPointCount() {
         return this.options.inputData.length
     }
 
-    generateDataPoint( i: number ) {
+    protected generateDataPoint( i: number ) {
         const point: SampledPoint<T> = {
             timestamp: i * this.interval + i * this.options.step,
             data: this.options.inputData[i]
@@ -99,7 +102,7 @@ class SampledDataGenerator<T> extends DataGenerator<SampledPoint<T>, SampledData
         return point
     }
 
-    infiniteReset( dataToReset: SampledPoint<T>, data: SampledPoint<T>[] ): SampledPoint<T> {
-        return dataToReset
+    protected infiniteReset( dataToReset: SampledPoint<T>, data: SampledPoint<T>[] ): SampledPoint<T> {
+        return { timestamp: dataToReset.timestamp + data[data.length - 1].timestamp, data: dataToReset.data }
     }
 }

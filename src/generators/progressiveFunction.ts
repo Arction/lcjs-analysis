@@ -90,10 +90,11 @@ class ProgressiveFunctionGenerator extends DataGenerator<Point, ProgressiveFunct
     /**
      * Returns how many points of data the generator should generate.
      */
-    getPointCount() {
+    protected getPointCount() {
         return this.numberOfPoints
     }
-    generateDataPoint() {
+
+    protected generateDataPoint() {
         const point = {
             x: this.x,
             y: this.options.samplingFunction( this.x )
@@ -101,7 +102,8 @@ class ProgressiveFunctionGenerator extends DataGenerator<Point, ProgressiveFunct
         this.x = this.x + this.options.step
         return point
     }
-    infiniteReset( dataToReset: Point, data: Point[] ): Point {
+
+    protected infiniteReset( dataToReset: Point, data: Point[] ): Point {
         return { x: dataToReset.x + data.length * ( data[data.length - 1].x - data[data.length - 2].x ), y: dataToReset.y }
     }
 }

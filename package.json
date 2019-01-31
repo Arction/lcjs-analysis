@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+ssh://git@gitlab.com/arction/xydata.git"
   },
-  "author": "Arction",
+  "author": "Arction Ltd.",
   "license": "MIT",
   "keywords": [
     "XY",

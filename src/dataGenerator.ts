@@ -3,12 +3,15 @@ import { DataHost } from './dataHost'
 /**
  * Abstract base class for all data generators.
  * Defines a generate function that is used to create new instances of data host.
+ * @param T Generator data type
+ * @param K Generator options type
  */
 export abstract class DataGenerator<T, K> {
     /**
      * Generator options
      */
     protected options: Readonly<K>
+
     constructor( args: K ) {
         this.options = args
     }
@@ -16,6 +19,7 @@ export abstract class DataGenerator<T, K> {
     /**
      * Generate new instance of DataHost with unique data.
      * Data is added to the DataHost asynchronously.
+     * @returns A new DataHost.
      */
     generate(): DataHost<T> {
         const dataHost = new DataHost<T>( this.infiniteReset, {
@@ -55,21 +59,24 @@ export abstract class DataGenerator<T, K> {
 
     /**
      * Abstract function to return how many points the generator should generate.
+     * @returns The number of points the generator should generate.
      */
-    abstract getPointCount(): number
+    protected abstract getPointCount(): number
 
     /**
      * Abstract function for all generators to override.
      * Used to create the random data for the data host.
      * @param index Index of the point to generate.
+     * @returns A single data point.
      */
-    abstract generateDataPoint( index: number ): T
+    protected abstract generateDataPoint( index: number ): T
 
     /**
      * Handles resetting the data when used as infinite stream of data.
      * Used to recalculate the point when it is moved to end of stream.
      * @param dataToReset Data to reset
      * @param data All of the data
+     * @returns New data point that should have the contained values adjusted for moving to end of the stream.
      */
-    abstract infiniteReset( dataToReset: T, data: ReadonlyArray<T> ): T
+    protected abstract infiniteReset( dataToReset: T, data: ReadonlyArray<T> ): T
 }

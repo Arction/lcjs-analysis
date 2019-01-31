@@ -117,12 +117,12 @@ class DeltaFunctionGenerator extends DataGenerator<Point, DeltaFunctionOptions> 
     /**
      * Returns how many points of data the generator should generate.
      */
-    getPointCount() {
+    protected getPointCount() {
         return this.options.numberOfPoints
     }
 
     private lastSpike = 0
-    generateDataPoint( i: number ) {
+    protected generateDataPoint( i: number ) {
         const sinceLast = i - this.lastSpike
         const value = { x: i, y: 0 }
         if ( sinceLast > this.options.minGap || this.options.minGap === -1 ) {
@@ -142,7 +142,7 @@ class DeltaFunctionGenerator extends DataGenerator<Point, DeltaFunctionOptions> 
         return value
     }
 
-    infiniteReset( dataToReset: Point, data: Point[] ): Point {
+    protected infiniteReset( dataToReset: Point, data: Point[] ): Point {
         return { x: dataToReset.x + data.length, y: dataToReset.y }
     }
 }
