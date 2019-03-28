@@ -8,7 +8,7 @@
   "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@gitlab.com/arction/xydata.git"
+    "url": "git+ssh://git@gitlab.com/arction/lcjs/xydata.git"
   },
   "author": "Arction Ltd.",
   "license": "MIT",
@@ -19,9 +19,9 @@
     "random"
   ],
   "bugs": {
-    "url": "https://gitlab.com/arction/xydata/issues"
+    "url": "https://gitlab.com/arction/lcjs/xydata/issues"
   },
-  "homepage": "https://gitlab.com/arction/xydata#README",
+  "homepage": "https://gitlab.com/arction/lcjs/xydata#README",
   "scripts": {
     "test": "gulp test:watch",
     "lint": "gulp lint:watch",
