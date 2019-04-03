@@ -16,7 +16,6 @@ const watch = (paths, tasks) => () => gulp.watch(paths, tasks)
 const allFiles = ['src/**/*.ts', 'test/**/*.ts']
 
 // Functions
-
 function buildRollup() {
     return rollup.rollup({
         input: 'src/index.ts',
@@ -110,31 +109,28 @@ function test(done) {
         }))
     done()
 }
-// Tasks
 /**
  * Testing Tasks
  */
 gulp.task('test', test)
-//gulp.task('test:watch', ['test'], watch(allFiles, ['test']))
+gulp.task('test:watch', gulp.series('test', watch(allFiles, gulp.series('test'))))
 /**
  * Linting Tasks
  */
 gulp.task('lint', lint)
-//gulp.task('lint:watch', ['lint'], watch(allFiles, ['lint']))
+gulp.task('lint:watch', gulp.series('lint', watch(allFiles, gulp.series('lint'))))
 /**
  * General
  */
-//gulp.task('ci:watch', ['test', 'lint'], watch(allFiles, ['test', 'lint']))
-gulp.task('clean', () => gulp.src(['dist'])
-    .pipe(clean())
-)
+gulp.task('ci:watch', gulp.parallel('test', 'lint'), watch(allFiles, gulp.parallel('test', 'lint')))
+gulp.task('clean', () => gulp.src(['dist']).pipe(clean()))
 /**
  * Build
  */
 gulp.task('build:rollup', buildRollup)
 gulp.task('build:terser', buildTerser)
 gulp.task('build', gulp.series('clean', 'build:rollup', 'build:terser'))
-//gulp.task('build:watch', ['build'], watch(allFiles, ['build']))
+gulp.task('build:watch', gulp.series('build', watch(allFiles, gulp.series('build'))))
 /**
  * TypeDoc Tasks
  */
