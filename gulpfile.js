@@ -54,7 +54,7 @@ function buildRollup() {
         )
 }
 
-function buildTester() {
+function buildTerser() {
     return gulp
         .src([pkg.iife])
         .pipe(terser({
@@ -132,8 +132,8 @@ gulp.task('clean', () => gulp.src(['dist'])
  * Build
  */
 gulp.task('build:rollup', buildRollup)
-gulp.task('build:tester', buildTester)
-gulp.task('build', gulp.series('clean', 'build:rollup', 'build:tester'))
+gulp.task('build:terser', buildTerser)
+gulp.task('build', gulp.series('clean', 'build:rollup', 'build:terser'))
 //gulp.task('build:watch', ['build'], watch(allFiles, ['build']))
 /**
  * TypeDoc Tasks
