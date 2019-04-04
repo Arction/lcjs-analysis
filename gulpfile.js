@@ -8,15 +8,14 @@ const rollupNodeResolve = require('rollup-plugin-node-resolve')
 const rollupCommonjs = require('rollup-plugin-commonjs')
 const rollupSourceMaps = require('rollup-plugin-sourcemaps')
 const terser = require('gulp-terser')
-const clean = require('gulp-rimraf')
-const sequence = require('gulp-sequence')
+const clean = require('del')
 const pkg = require('./package.json')
 const typedoc = require('gulp-typedoc')
 const watch = (paths, tasks) => () => gulp.watch(paths, tasks)
 const allFiles = ['src/**/*.ts', 'test/**/*.ts']
 
 // Functions
-function buildRollup() {
+function bundle() {
     return rollup.rollup({
         input: 'src/index.ts',
         plugins: [
@@ -53,7 +52,7 @@ function buildRollup() {
         )
 }
 
-function buildTerser() {
+function minify() {
     return gulp
         .src([pkg.iife])
         .pipe(terser({
@@ -123,15 +122,15 @@ gulp.task('lint:watch', gulp.series('lint', watch(allFiles, gulp.series('lint'))
  * General
  */
 gulp.task('ci:watch', gulp.parallel('test', 'lint'), watch(allFiles, gulp.parallel('test', 'lint')))
-gulp.task('clean', () => gulp.src(['dist']).pipe(clean()))
+gulp.task('clean', () => clean('dist'))
 /**
  * Build
  */
-gulp.task('build:rollup', buildRollup)
-gulp.task('build:terser', buildTerser)
+gulp.task('build:rollup', bundle)
+gulp.task('build:terser', minify)
 gulp.task('build', gulp.series('clean', 'build:rollup', 'build:terser'))
 gulp.task('build:watch', gulp.series('build', watch(allFiles, gulp.series('build'))))
 /**
  * TypeDoc Tasks
  */
-gulp.task('docs', docs)
+exports.docs = docs
