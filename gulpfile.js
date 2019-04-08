@@ -11,13 +11,11 @@ const terser = require('gulp-terser')
 const del = require('del')
 const pkg = require('./package.json')
 const typedoc = require('gulp-typedoc')
-const watch = (paths, tasks) => () => gulp.watch(paths, tasks)
 const allFiles = ['src/**/*.ts', 'test/**/*.ts']
-
-// Functions
+const watch = (paths, tasks) => () => gulp.watch(paths, tasks)
 
 /**
- * Build
+ * Bundle task
  */
 function bundle() {
     return rollup.rollup({
@@ -77,7 +75,7 @@ function minify() {
         .pipe(dest('dist'))
 }
 /**
- * TypeDoc Tasks
+ * TypeDoc Task
  */
 function docs() {
     return src(['src/**/*.ts'])
@@ -95,7 +93,7 @@ function docs() {
         }))
 }
 /**
- * Linting task
+ * Linting tasks
  */
 function lint() {
     return src(allFiles)
@@ -104,6 +102,8 @@ function lint() {
         }))
         .pipe(tslint.report({ allowWarnings: true }))
 }
+// Lint watcher
+const lintWatch = series(lint, watch(allFiles, series(lint)))
 /**
  * Testing task
  */
@@ -115,34 +115,29 @@ function test() {
             reporter: 'spec'
         }))
 }
+// Test watcher
+const testWatch = series(test, watch(allFiles, series(test)))
+// CI watcher
+const ciWatch = series(parallel(test, lint), watch(allFiles, parallel(test, lint)))
 /**
  * Cleaning task
  */
 function clean() {
     return del('dist')
 }
-
+/**
+ * Building tasks
+ */
 const build = series(clean, bundle, minify)
+const buildWatch = series(build, watch(allFiles, series(build)))
 
-const buildWatch = series(parallel(build), watch(allFiles, build))
-
-// gulp.task('test', test)
-// gulp.task('test:watch', ['test'], watch(allFiles, ['test']))
-//gulp.task('lint', lint)
-//gulp.task('lint:watch', gulp.series('lint', watch(allFiles, gulp.series('lint'))))
-//gulp.task('ci:watch', ['test', 'lint'], watch(allFiles, ['test', 'lint']))
-//gulp.task('clean', () => clean('dist'))
-//gulp.task('build:rollup', bundle)
-//gulp.task('build:terser', minify)
-//gulp.task('build', (cb) => sequence('clean', 'build:rollup', 'build:terser', cb))
-//gulp.task('build:watch', ['build'], watch(allFiles, ['build']))
-
+// Export tasks for CLI
 exports.docs = docs
 exports.test = test
-exports.testWatch = series(test, watch(allFiles, series(test)))
+exports.testWatch = testWatch
 exports.lint = lint
-exports.lintWatch = series(lint, watch(allFiles, series(lint)))
-exports.ciWatch = parallel(test, lint), watch(allFiles, parallel(test, lint))
+exports.lintWatch = lintWatch
+exports.ciWatch = ciWatch
 exports.clean = clean
 exports.bundle = bundle
 exports.minify = minify
