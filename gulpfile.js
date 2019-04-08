@@ -1,5 +1,5 @@
 // gulpfile.js
-const gulp = require('gulp')
+const { series, parallel, src, dest, gulp } = require('gulp')
 const mocha = require('gulp-mocha')
 const tslint = require('gulp-tslint')
 const rollup = require('rollup')
@@ -8,7 +8,7 @@ const rollupNodeResolve = require('rollup-plugin-node-resolve')
 const rollupCommonjs = require('rollup-plugin-commonjs')
 const rollupSourceMaps = require('rollup-plugin-sourcemaps')
 const terser = require('gulp-terser')
-const clean = require('del')
+const del = require('del')
 const pkg = require('./package.json')
 const typedoc = require('gulp-typedoc')
 const watch = (paths, tasks) => () => gulp.watch(paths, tasks)
@@ -53,8 +53,7 @@ function bundle() {
 }
 
 function minify() {
-    return gulp
-        .src([pkg.iife])
+    return src([pkg.iife])
         .pipe(terser({
             mangle: {
                 toplevel: true,
@@ -69,11 +68,11 @@ function minify() {
             keep_classnames: false,
             keep_fnames: false
         }))
-        .pipe(gulp.dest('dist'))
+        .pipe(dest('dist'))
 }
 
 function docs() {
-    return gulp.src(['src/**/*.ts'])
+    return src(['src/**/*.ts'])
         .pipe(typedoc({
             module: 'commonjs',
             target: 'ES5',
@@ -88,49 +87,62 @@ function docs() {
         }))
 }
 
-function lint(done) {
-    gulp
-        .src(allFiles)
+function lint() {
+    return src(allFiles)
         .pipe(tslint({
             formatter: 'verbose'
         }))
         .pipe(tslint.report({ allowWarnings: true }))
-    done()
 }
 
-function test(done) {
-    gulp
-        .src('./test/**/*.spec.ts', { read: false })
+function test() {
+    return src('./test/**/*.spec.ts', { read: false })
         .pipe(mocha({
             "timeout": 100000,
             require: 'ts-node/register',
             reporter: 'spec'
         }))
-    done()
 }
+
+function clean() {
+    return del('dist')
+}
+
+const build = series(clean, bundle, minify)
+
 /**
  * Testing Tasks
  */
-gulp.task('test', test)
-gulp.task('test:watch', gulp.series('test', watch(allFiles, gulp.series('test'))))
+// gulp.task('test', test)
+// gulp.task('testWatch', gulp.series('test', watch(allFiles, gulp.series('test'))))
 /**
  * Linting Tasks
  */
-gulp.task('lint', lint)
-gulp.task('lint:watch', gulp.series('lint', watch(allFiles, gulp.series('lint'))))
+//gulp.task('lint', lint)
+//gulp.task('lint:watch', gulp.series('lint', watch(allFiles, gulp.series('lint'))))
 /**
  * General
  */
-gulp.task('ci:watch', gulp.parallel('test', 'lint'), watch(allFiles, gulp.parallel('test', 'lint')))
-gulp.task('clean', () => clean('dist'))
+//gulp.task('ci:watch', gulp.parallel('test', 'lint'), watch(allFiles, gulp.parallel('test', 'lint')))
+//gulp.task('clean', () => clean('dist'))
 /**
  * Build
  */
-gulp.task('build:rollup', bundle)
-gulp.task('build:terser', minify)
-gulp.task('build', gulp.series('clean', 'build:rollup', 'build:terser'))
-gulp.task('build:watch', gulp.series('build', watch(allFiles, gulp.series('build'))))
+//gulp.task('build:rollup', bundle)
+//gulp.task('build:terser', minify)
+//gulp.task('build', gulp.series('clean', 'build:rollup', 'build:terser'))
+//gulp.task('build:watch', gulp.series('build', watch(allFiles, gulp.series('build'))))
 /**
  * TypeDoc Tasks
  */
 exports.docs = docs
+exports.test = test
+exports.testWatch = series(test, watch(allFiles, series(test)))
+exports.lint = lint
+exports.lintWatch = series(lint, watch(allFiles, series(lint)))
+exports.ciWatch = parallel(test, lint), watch(allFiles, parallel(test, lint))
+exports.clean = clean
+exports.bundle = bundle
+exports.minify = minify
+exports.build = build
+exports.buildWatch = series(build, watch(allFiles, build))
