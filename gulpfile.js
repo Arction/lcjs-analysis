@@ -1,5 +1,5 @@
 // gulpfile.js
-const { series, parallel, src, dest, gulp } = require('gulp')
+const { series, parallel, src, dest, watch } = require('gulp')
 const mocha = require('gulp-mocha')
 const tslint = require('gulp-tslint')
 const rollup = require('rollup')
@@ -12,10 +12,9 @@ const del = require('del')
 const pkg = require('./package.json')
 const typedoc = require('gulp-typedoc')
 const allFiles = ['src/**/*.ts', 'test/**/*.ts']
-const watch = (paths, tasks) => () => gulp.watch(paths, tasks)
-
+// Task functions
 /**
- * Bundle task
+ * Bundle function
  */
 function bundle() {
     return rollup.rollup({
@@ -54,7 +53,7 @@ function bundle() {
         )
 }
 /**
- * Minify task
+ * Minify function
  */
 function minify() {
     return src([pkg.iife])
@@ -75,7 +74,7 @@ function minify() {
         .pipe(dest('dist'))
 }
 /**
- * TypeDoc Task
+ * TypeDoc function
  */
 function docs() {
     return src(['src/**/*.ts'])
@@ -93,7 +92,7 @@ function docs() {
         }))
 }
 /**
- * Linting tasks
+ * Linting function
  */
 function lint() {
     return src(allFiles)
@@ -103,7 +102,8 @@ function lint() {
         .pipe(tslint.report({ allowWarnings: true }))
 }
 // Lint watcher
-const lintWatch = series(lint, watch(allFiles, series(lint)))
+const lintWatcher = () => watch(allFiles, series(lint))
+const lintWatch = series(lint, lintWatcher)
 /**
  * Testing task
  */
@@ -115,23 +115,28 @@ function test() {
             reporter: 'spec'
         }))
 }
-// Test watcher
-const testWatch = series(test, watch(allFiles, series(test)))
-// CI watcher
-const ciWatch = series(parallel(test, lint), watch(allFiles, parallel(test, lint)))
 /**
- * Cleaning task
+ *  Test watch functions
+*/
+const testWatcher = () => watch(allFiles, test)
+const testWatch = series(test, testWatcher)
+/**
+ * Cleaning function
  */
-function clean() {
-    return del('dist')
-}
+const clean = () => del('dist')
 /**
- * Building tasks
+ * CI watch functions
+ */
+const ciWatcher = () => watch(allFiles, parallel(test, lint))
+const ciWatch = series(parallel(test, lint), ciWatcher)
+/**
+ * Building functions
  */
 const build = series(clean, bundle, minify)
-const buildWatch = series(build, watch(allFiles, series(build)))
+const buildWatcher = () => watch(allFiles, build)
+const buildWatch = series(build, buildWatcher)
 
-// Export tasks for CLI
+// Export functions for gulp CLI
 exports.docs = docs
 exports.test = test
 exports.testWatch = testWatch
@@ -143,3 +148,4 @@ exports.bundle = bundle
 exports.minify = minify
 exports.build = build
 exports.buildWatch = buildWatch
+exports.default = build

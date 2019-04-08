@@ -13,7 +13,6 @@ export interface Point {
      */
     y: number
 }
-
 /**
  * OHLC data
  * timestamp, open, high, low, close
