@@ -137,13 +137,23 @@ const buildWatcher = () => watch(allFiles, build)
 const buildWatch = series(build, buildWatcher)
 
 // Export functions for gulp CLI
+// Build documentation
 exports.docs = docs
+// Start testing
 exports.test = test
+// Start test watching
 exports.testWatch = testWatch
+// Start linting
 exports.lint = lint
+// Start lint watching
 exports.lintWatch = lintWatch
+// Start CI watching
 exports.ciWatch = ciWatch
+// Clean folder with documetation distribution
 exports.clean = clean
+// Build documentation distribution
 exports.build = build
+// Start build watching
 exports.buildWatch = buildWatch
+// Default case: build documentation distribution
 exports.default = build
