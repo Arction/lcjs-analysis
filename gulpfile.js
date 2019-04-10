@@ -149,11 +149,11 @@ exports.lint = lint
 exports.lintWatch = lintWatch
 // Start CI watching
 exports.ciWatch = ciWatch
-// Clean folder with documetation distribution
+// Clean folder with distribution
 exports.clean = clean
-// Build documentation distribution
+// Build distribution
 exports.build = build
 // Start build watching
 exports.buildWatch = buildWatch
-// Default case: build documentation distribution
+// Default case: build distribution
 exports.default = build
