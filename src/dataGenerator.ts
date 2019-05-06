@@ -40,10 +40,10 @@ export abstract class DataGenerator<T, K> {
      * @param dataHost The data host to push the data to.
      */
     private generateChunks( baseIndex: number, total: number, dataHost: DataHost<T> ) {
-        const startTime = Date.now()
+        const startTime = window.performance.now()
         const points = []
         // Generate data until elapsed time is more than 15 ms or we have generated enough data.
-        for ( let i = 0; Date.now() - startTime < 15 && baseIndex < total; i++ ) {
+        for ( let i = 0; window.performance.now() - startTime < 15 && baseIndex < total; i++ ) {
             const point = this.generateDataPoint( baseIndex )
             baseIndex++;
             points.push( point )
