@@ -2,6 +2,8 @@
 
 A data generator library.
 
+The generator is used a to generate data for LightningChart<sup>&#174;</sup> JS charting library. [https://www.arction.com/](https://www.arction.com/)
+
 ## Installation
 
 `npm install --save @arction/xydata`
@@ -105,14 +107,6 @@ after the stream has been generated.
 | Sample Data | Sample given array with specified frequency and user defined step. |
 | Trace | Generate random trace data that can go to any direction on the XY coordinates. |
 | White Noise | Generate white noise. |
-
-## Project structure
-
-| Folder | Description |
-|--------|-------------|
-| src    | project source code |
-| src/generators | the invidual generators |
-| test   | unit tests  |
 
 ## Development instructions
 
