@@ -55,7 +55,7 @@
     "gulp-terser": "^1.1.7",
     "gulp-tslint": "^8.1.4",
     "gulp-typedoc": "^2.2.2",
-    "mocha": "^6.1.1",
+    "mocha": "^6.1.4",
     "rollup": "^1.9.0",
     "rollup-plugin-commonjs": "^9.3.4",
     "rollup-plugin-node-resolve": "^4.2.1",
