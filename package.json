@@ -2,46 +2,42 @@
   "name": "@arction/xydata",
   "version": "1.0.0",
   "description": "A random data generation library.",
-  "main": "dist/index.js",
-  "module": "dist/index.es.js",
-  "iife": "dist/index.iife.js",
-  "types": "dist/index.d.ts",
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@gitlab.com/arction/lcjs/xydata.git"
-  },
-  "author": "Arction Ltd.",
-  "license": "MIT",
   "keywords": [
     "XY",
     "data",
     "generation",
     "random"
   ],
+  "homepage": "https://gitlab.com/arction/lcjs/xydata#README",
   "bugs": {
     "url": "https://gitlab.com/arction/lcjs/xydata/issues"
   },
-  "homepage": "https://gitlab.com/arction/lcjs/xydata#README",
-  "scripts": {
-    "test": "gulp testWatch",
-    "lint": "gulp lintWatch",
-    "ci:watch": "gulp ciWatch",
-    "ci:test": "gulp test",
-    "ci:lint": "gulp lint",
-    "build": "gulp build",
-    "build:watch": "gulp buildWatch",
-    "docs": "gulp docs",
-    "prepack": "npm install && gulp build",
-    "version": "gulp docs"
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/arction/lcjs/xydata.git"
   },
+  "license": "MIT",
+  "author": "Arction Ltd.",
   "files": [
     "dist/**/*",
     "LICENSE",
     "package.json",
     "README.md"
   ],
-  "publishConfig": {
-    "tag": "beta"
+  "main": "dist/index.js",
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "gulp build",
+    "build:watch": "gulp buildWatch",
+    "ci:lint": "gulp lint",
+    "ci:test": "gulp test",
+    "ci:watch": "gulp ciWatch",
+    "docs": "gulp docs",
+    "lint": "gulp lintWatch",
+    "prepack": "npm install && gulp build",
+    "test": "gulp testWatch",
+    "version": "gulp docs"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
@@ -65,5 +61,9 @@
     "tslint": "^5.15.0",
     "typedoc": "^0.14.2",
     "typescript": "^3.4.2"
-  }
+  },
+  "publishConfig": {
+    "tag": "beta"
+  },
+  "iife": "dist/index.iife.js"
 }
