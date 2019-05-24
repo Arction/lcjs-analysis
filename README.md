@@ -8,6 +8,10 @@ The generator is used a to generate data for LightningChart<sup>&#174;</sup> JS 
 
 `npm install --save @arction/xydata`
 
+## Documentation
+
+Online documentation is available at [arction.github.io/xydata](https://arction.github.io/xydata)
+
 ## Getting started
 
 ```ts
