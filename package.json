@@ -31,7 +31,8 @@
     "build": "gulp build",
     "build:watch": "gulp buildWatch",
     "docs": "gulp docs",
-    "prepack": "npm install && gulp build"
+    "prepack": "npm install && gulp build",
+    "version": "gulp docs"
   },
   "files": [
     "dist/**/*",
