@@ -1,0 +1,424 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>XYData Generator API Documentation</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">XYData Generator API Documentation</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1> XYData Generator API Documentation</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<h1 id="xydata-generator-library">XYData generator library</h1>
+				<p>A data generator library.</p>
+				<h2 id="installation">Installation</h2>
+				<p><code>npm install --save @arction/xydata</code></p>
+				<h2 id="getting-started">Getting started</h2>
+				<pre><code class="language-ts"><span class="hljs-keyword">import</span> { createProgressiveRandomGenerator } <span class="hljs-keyword">from</span> <span class="hljs-string">'@arction/xydata'</span>
+
+<span class="hljs-comment">// create new instance of progressive random generator</span>
+createProgressiveRandomGenerator()
+    <span class="hljs-comment">// define that 1000 points should be generated</span>
+    .setNumberOfPoints(<span class="hljs-number">1000</span>)
+    <span class="hljs-comment">// generate those 1000 points</span>
+    .generate()
+    <span class="hljs-comment">// set stream to progress every 250 milliseconds</span>
+    .setStreamInterval(<span class="hljs-number">250</span>)
+    <span class="hljs-comment">// set stream to output 10 points at a time</span>
+    .setStreamBatchSize(<span class="hljs-number">10</span>)
+    <span class="hljs-comment">// make the stream infinite</span>
+    .setStreamRepeat(<span class="hljs-literal">true</span>)
+    <span class="hljs-comment">// create a new stream with previously defined stream settings</span>
+    .toStream()
+    <span class="hljs-comment">// every time the stream outputs data, run this function on each of the data points</span>
+    .forEach(<span class="hljs-function"><span class="hljs-params">data</span>=&gt;</span>{
+        <span class="hljs-built_in">console</span>.log(data)
+    })</code></pre>
+				<p>This creates a basic progressive random generator and uses the Stream API to output the data to console.</p>
+				<blockquote>
+					<p>Note: You should newer create a new instance of any generator using the <code>new</code> keyword. Generators should only be created with the <code>create...</code> functions.</p>
+				</blockquote>
+				<p>When calling <code>.generate()</code> on any data generator a new instance of a &#39;DataHost&#39; is returned. The <code>.generate()</code> function can be called multiple times to get a new set of data with same settings as before but different values each time.</p>
+				<h3 id="creating-multiple-data-sets">Creating multiple data sets</h3>
+				<p>You can call <code>.generate()</code> function multiple times to get new sets of data.</p>
+				<pre><code class="language-ts"><span class="hljs-keyword">import</span> { createTraceGenerator } <span class="hljs-keyword">from</span> <span class="hljs-string">'@arction/xydata'</span>
+
+<span class="hljs-keyword">const</span> generator = createTraceGenerator()
+
+<span class="hljs-keyword">const</span> dataSet1 = generator.generate()
+<span class="hljs-keyword">const</span> dataSet2 = generator.generate()</code></pre>
+				<p>This would give you two different data sets that have been generated based on same settings but which will have different values.</p>
+				<h3 id="changing-generator-settings">Changing generator settings</h3>
+				<p>When a data generator is created it has some default settings based on which generator it is. To change any of these settings call <code>.set....</code> function that will create a new data generator with that setting changed. You can&#39;t change multiple settings with a single call or change settings of a generator that has been created previously. A change in settings will always result in a new generator.</p>
+				<pre><code class="language-ts"><span class="hljs-keyword">import</span> { createTraceGenerator } <span class="hljs-keyword">from</span> <span class="hljs-string">'@arction/xydata'</span>
+
+<span class="hljs-keyword">const</span> generator = createTraceGenerator()
+    .setNumberOfPoints( <span class="hljs-number">10</span> )
+
+<span class="hljs-keyword">const</span> derivedGenerator = generator.setNumberOfPoints( <span class="hljs-number">20</span> )
+
+<span class="hljs-keyword">const</span> dataSet1 = derivedGenerator.generate()
+
+<span class="hljs-keyword">const</span> dataSet2 = generator.generate()</code></pre>
+				<p>This would create two data sets with different values and settings. <code>dataSet1</code> would have 20 data points and <code>dataSet2</code> would have 10.</p>
+				<h3 id="data-streams">Data streams</h3>
+				<p>The data sets have possibility to output the data as a stream of data. These streams can be used to alter the data in multiple steps.</p>
+				<pre><code class="language-ts"><span class="hljs-keyword">import</span> { createTraceGenerator } <span class="hljs-keyword">from</span> <span class="hljs-string">'@arction/xydata'</span>
+
+createTraceGenerator()
+    .setNumberOfPoints( <span class="hljs-number">10</span> )
+    .generate()
+    .toStream()
+    .map( <span class="hljs-function"><span class="hljs-params">value</span> =&gt;</span> ( { x:value.x, y: value.y * <span class="hljs-number">2</span> } ) )
+    .forEach( <span class="hljs-function"><span class="hljs-params">value</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(value) )</code></pre>
+				<p>This code would create a data generator and then stream that data through two functions, map and forEach.
+					The map function alters the data by multiplying the y value by 2 and then streams it to the forEach function.
+				The forEach function would log each invidual point to console.</p>
+				<p>The settings for the stream are set by the Data Host that is returned from the <code>.generate()</code> function. The stream settings can&#39;t be changed
+				after the stream has been generated.</p>
+				<h2 id="generators">Generators</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>Generator</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody><tr>
+							<td>Delta Function</td>
+							<td>Generate mostly flat data with random spikes.</td>
+						</tr>
+						<tr>
+							<td>OHLC</td>
+							<td>Generate Open, High, Low, Close data.</td>
+						</tr>
+						<tr>
+							<td>Progressive Function</td>
+							<td>Sample a user defined function with given X step.</td>
+						</tr>
+						<tr>
+							<td>Progressive Random</td>
+							<td>Generate random progressive data that has progessive X step.</td>
+						</tr>
+						<tr>
+							<td>Progressive Trace</td>
+							<td>Generate random trace data from previous point that has progressive X step.</td>
+						</tr>
+						<tr>
+							<td>Sample Data</td>
+							<td>Sample given array with specified frequency and user defined step.</td>
+						</tr>
+						<tr>
+							<td>Trace</td>
+							<td>Generate random trace data that can go to any direction on the XY coordinates.</td>
+						</tr>
+						<tr>
+							<td>White Noise</td>
+							<td>Generate white noise.</td>
+						</tr>
+				</tbody></table>
+				<h2 id="project-structure">Project structure</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>Folder</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody><tr>
+							<td>src</td>
+							<td>project source code</td>
+						</tr>
+						<tr>
+							<td>src/generators</td>
+							<td>the invidual generators</td>
+						</tr>
+						<tr>
+							<td>test</td>
+							<td>unit tests</td>
+						</tr>
+				</tbody></table>
+				<h2 id="development-instructions">Development instructions</h2>
+				<p>The project is developed using TypeScript. Build system of the project heavily relies on Node.js. Dependencies are managed with <em>npm</em>, therefore, remember to run <strong>npm install</strong> before starting of anything else. </p>
+				<p>The project uses RollUp for creating the distributable library files.</p>
+				<p>There are several <em>npm scripts</em>, which are used in development process:</p>
+				<table>
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Command</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody><tr>
+							<td>test</td>
+							<td>npm test</td>
+							<td>run tests and watch</td>
+						</tr>
+						<tr>
+							<td>lint</td>
+							<td>npm run lint</td>
+							<td>run static analyzer and watch</td>
+						</tr>
+						<tr>
+							<td>ci:test</td>
+							<td>npm run ci:test</td>
+							<td>run tests once</td>
+						</tr>
+						<tr>
+							<td>ci:lint</td>
+							<td>npm run ci:lint</td>
+							<td>run static analyzer once</td>
+						</tr>
+						<tr>
+							<td>ci:watch</td>
+							<td>npm run ci:watch</td>
+							<td>run CI circle and watch</td>
+						</tr>
+						<tr>
+							<td>build</td>
+							<td>npm run build</td>
+							<td>build the library</td>
+						</tr>
+						<tr>
+							<td>build:watch</td>
+							<td>npm run build:watch</td>
+							<td>build the library and watch</td>
+						</tr>
+						<tr>
+							<td>docs</td>
+							<td>npm run docs</td>
+							<td>build documentation</td>
+						</tr>
+				</tbody></table>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="classes/datagenerator.html" class="tsd-kind-icon">Data<wbr>Generator</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="classes/datahost.html" class="tsd-kind-icon">Data<wbr>Host</a>
+					</li>
+					<li class=" tsd-kind-class tsd-is-not-exported">
+						<a href="classes/deltafunctiongenerator.html" class="tsd-kind-icon">Delta<wbr>Function<wbr>Generator</a>
+					</li>
+					<li class=" tsd-kind-class tsd-is-not-exported">
+						<a href="classes/ohlcgenerator.html" class="tsd-kind-icon">OHLCGenerator</a>
+					</li>
+					<li class=" tsd-kind-class tsd-is-not-exported">
+						<a href="classes/progressivefunctiongenerator.html" class="tsd-kind-icon">Progressive<wbr>Function<wbr>Generator</a>
+					</li>
+					<li class=" tsd-kind-class tsd-is-not-exported">
+						<a href="classes/progressiverandomgenerator.html" class="tsd-kind-icon">Progressive<wbr>Random<wbr>Generator</a>
+					</li>
+					<li class=" tsd-kind-class tsd-is-not-exported">
+						<a href="classes/progressivetracegenerator.html" class="tsd-kind-icon">Progressive<wbr>Trace<wbr>Generator</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-not-exported">
+						<a href="classes/sampleddatagenerator.html" class="tsd-kind-icon">Sampled<wbr>Data<wbr>Generator</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="classes/stream.html" class="tsd-kind-icon">Stream</a>
+					</li>
+					<li class=" tsd-kind-class tsd-is-not-exported">
+						<a href="classes/tracegenerator.html" class="tsd-kind-icon">Trace<wbr>Generator</a>
+					</li>
+					<li class=" tsd-kind-class tsd-is-not-exported">
+						<a href="classes/whitenoisegenerator.html" class="tsd-kind-icon">White<wbr>Noise<wbr>Generator</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/deltafunctionoptions.html" class="tsd-kind-icon">Delta<wbr>Function<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ohlcgeneratoroptions.html" class="tsd-kind-icon">OHLCGenerator<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/point.html" class="tsd-kind-icon">Point</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/progressivefunctionoptions.html" class="tsd-kind-icon">Progressive<wbr>Function<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/progressiverandomoptions.html" class="tsd-kind-icon">Progressive<wbr>Random<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/progressivetracegeneratoroptions.html" class="tsd-kind-icon">Progressive<wbr>Trace<wbr>Generator<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-not-exported">
+						<a href="interfaces/sampleddatageneratoroptions.html" class="tsd-kind-icon">Sampled<wbr>Data<wbr>Generator<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/sampledpoint.html" class="tsd-kind-icon">Sampled<wbr>Point</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/streamoptions.html" class="tsd-kind-icon">Stream<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/tracegeneratoroptions.html" class="tsd-kind-icon">Trace<wbr>Generator<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/whitenoisegeneratoroptions.html" class="tsd-kind-icon">White<wbr>Noise<wbr>Generator<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#ohlcdata" class="tsd-kind-icon">OHLCData</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#streamcontinuehandler" class="tsd-kind-icon">Stream<wbr>Continue<wbr>Handler</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#createdeltafunctiongenerator" class="tsd-kind-icon">create<wbr>Delta<wbr>Function<wbr>Generator</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#createohlcgenerator" class="tsd-kind-icon">createOHLCGenerator</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#createprogressivefunctiongenerator" class="tsd-kind-icon">create<wbr>Progressive<wbr>Function<wbr>Generator</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#createprogressiverandomgenerator" class="tsd-kind-icon">create<wbr>Progressive<wbr>Random<wbr>Generator</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#createprogressivetracegenerator" class="tsd-kind-icon">create<wbr>Progressive<wbr>Trace<wbr>Generator</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#createsampleddatagenerator" class="tsd-kind-icon">create<wbr>Sampled<wbr>Data<wbr>Generator</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#createtracegenerator" class="tsd-kind-icon">create<wbr>Trace<wbr>Generator</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#createwhitenoisegenerator" class="tsd-kind-icon">create<wbr>White<wbr>Noise<wbr>Generator</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer>
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>
