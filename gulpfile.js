@@ -18,7 +18,7 @@ const allFiles = ['src/**/*.ts', 'test/**/*.ts']
  */
 function bundle() {
     return rollup.rollup({
-        input: 'src/index.ts',
+        input: 'src/xydata.ts',
         plugins: [
             rollupTypescript({ typescript: require('typescript'), tsconfig: './tsconfig.json' }),
             rollupCommonjs(),

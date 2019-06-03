@@ -24,9 +24,9 @@
     "package.json",
     "README.md"
   ],
-  "main": "dist/index.js",
-  "module": "dist/index.es.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/xydata.js",
+  "module": "dist/xydata.es.js",
+  "types": "dist/xydata.d.ts",
   "scripts": {
     "build": "gulp build",
     "build:watch": "gulp buildWatch",
@@ -65,5 +65,5 @@
   "publishConfig": {
     "tag": "beta"
   },
-  "iife": "dist/index.iife.js"
+  "iife": "dist/xydata.iife.js"
 }
