@@ -8,13 +8,13 @@
     "generation",
     "random"
   ],
-  "homepage": "https://gitlab.com/arction/lcjs/xydata#README",
+  "homepage": "https://github.com/Arction/xydata#README",
   "bugs": {
-    "url": "https://gitlab.com/arction/lcjs/xydata/issues"
+    "url": "https://github.com/Arction/xydata/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@gitlab.com/arction/lcjs/xydata.git"
+    "url": "git@github.com:Arction/xydata.git"
   },
   "license": "MIT",
   "author": "Arction Ltd.",
