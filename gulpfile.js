@@ -13,12 +13,13 @@ const pkg = require('./package.json')
 const typedoc = require('gulp-typedoc')
 const allFiles = ['src/**/*.ts', 'test/**/*.ts']
 // Task functions
+const moduleName = 'lcjsa'
 /**
  * Bundle function
  */
 function bundle() {
     return rollup.rollup({
-        input: 'src/xydata.ts',
+        input: 'src/lcjs-analysis.ts',
         plugins: [
             rollupTypescript({ typescript: require('typescript'), tsconfig: './tsconfig.json' }),
             rollupCommonjs(),
@@ -33,21 +34,21 @@ function bundle() {
                     format: 'cjs',
                     exports: 'named',
                     sourcemap: true,
-                    name: 'xydata'
+                    name: moduleName
                 }),
                 bundle.write({
                     file: pkg.module,
                     format: 'es',
                     exports: 'named',
                     sourcemap: true,
-                    name: 'xydata'
+                    name: moduleName
                 }),
                 bundle.write({
                     file: pkg.iife,
                     format: 'iife',
                     exports: 'named',
                     sourcemap: true,
-                    name: 'xydata'
+                    name: moduleName
                 })
             ])
         )
@@ -61,7 +62,7 @@ function minify() {
             mangle: {
                 toplevel: true,
                 reserved: [
-                    'xydata'
+                    moduleName
                 ],
                 properties: {
                     regex: /\b_\w*/,
@@ -87,7 +88,7 @@ function docs() {
             out: 'docs',
             mode: 'file',
             tsConfig: 'tsconfig.json',
-            name: 'XYData Generator API Documentation',
+            name: 'LCJS analysis API Documentation',
             hideGenerator: true
         }))
 }

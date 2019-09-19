@@ -1,20 +1,18 @@
 {
-  "name": "@arction/xydata",
-  "version": "1.0.1",
-  "description": "A random data generation library.",
+  "name": "@arction/lcjs-analysis",
+  "version": "1.0.0",
+  "description": "A data analysis library.",
   "keywords": [
-    "XY",
-    "data",
-    "generation",
-    "random"
+    "lcjs",
+    "trading"
   ],
-  "homepage": "https://github.com/Arction/xydata#README",
+  "homepage": "https://github.com/Arction/lcjs-analysis#README",
   "bugs": {
-    "url": "https://github.com/Arction/xydata/issues"
+    "url": "https://github.com/Arction/lcjs-analysis/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:Arction/xydata.git"
+    "url": "git@github.com:Arction/lcjs-analysis.git"
   },
   "license": "MIT",
   "author": "Arction Ltd.",
@@ -24,9 +22,9 @@
     "package.json",
     "README.md"
   ],
-  "main": "dist/xydata.js",
-  "module": "dist/xydata.es.js",
-  "types": "dist/xydata.d.ts",
+  "main": "dist/lcjs-analysis.js",
+  "module": "dist/lcjs-analysis.es.js",
+  "types": "dist/lcjs-analysis.d.ts",
   "scripts": {
     "build": "gulp build",
     "build:watch": "gulp buildWatch",
@@ -65,5 +63,5 @@
   "publishConfig": {
     "tag": "beta"
   },
-  "iife": "dist/xydata.iife.js"
+  "iife": "dist/lcjs-analysis.iife.js"
 }
