@@ -2,4 +2,4 @@
  * Controls what is exported
  */
 
-export { simpleMovingAverage } from './trading'
+export { simpleMovingAverage, exponentialMovingAverage, bollingerBands, relativeStrengthIndex } from './trading'
