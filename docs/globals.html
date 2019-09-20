@@ -68,6 +68,7 @@
 						<section class="tsd-index-section ">
 							<h3>Type aliases</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-type-alias"><a href="globals.html#areapoint" class="tsd-kind-icon">Area<wbr>Point</a></li>
 								<li class="tsd-kind-type-alias"><a href="globals.html#point" class="tsd-kind-icon">Point</a></li>
 								<li class="tsd-kind-type-alias"><a href="globals.html#xohlc" class="tsd-kind-icon">XOHLC</a></li>
 							</ul>
@@ -75,7 +76,11 @@
 						<section class="tsd-index-section ">
 							<h3>Functions</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-function"><a href="globals.html#bollingerbands" class="tsd-kind-icon">bollinger<wbr>Bands</a></li>
+								<li class="tsd-kind-function"><a href="globals.html#exponentialmovingaverage" class="tsd-kind-icon">exponential<wbr>Moving<wbr>Average</a></li>
+								<li class="tsd-kind-function"><a href="globals.html#relativestrengthindex" class="tsd-kind-icon">relative<wbr>Strength<wbr>Index</a></li>
 								<li class="tsd-kind-function"><a href="globals.html#simplemovingaverage" class="tsd-kind-icon">simple<wbr>Moving<wbr>Average</a></li>
+								<li class="tsd-kind-function"><a href="globals.html#standarddeviation" class="tsd-kind-icon">standard<wbr>Deviation</a></li>
 							</ul>
 						</section>
 					</div>
@@ -84,12 +89,56 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Type aliases</h2>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="areapoint" class="tsd-anchor"></a>
+					<h3>Area<wbr>Point</h3>
+					<div class="tsd-signature tsd-kind-icon">Area<wbr>Point<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Arction/lcjs-analysis/blob/43edc2c/src/datastructures.ts#L22">datastructures.ts:22</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Datapoint with one X value and two Y values.</p>
+						</div>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter">
+								<h5>high<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p>High value of Point in the given position.</p>
+									</div>
+								</div>
+							</li>
+							<li class="tsd-parameter">
+								<h5>low<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p>Low value of Point in the given position.</p>
+									</div>
+								</div>
+							</li>
+							<li class="tsd-parameter">
+								<h5>position<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p>Position of Point.</p>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
 					<a name="point" class="tsd-anchor"></a>
 					<h3>Point</h3>
 					<div class="tsd-signature tsd-kind-icon">Point<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Arction/lcjs-analysis/blob/42a2a1d/src/datastructures.ts#L15">datastructures.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/Arction/lcjs-analysis/blob/43edc2c/src/datastructures.ts#L15">datastructures.ts:15</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -115,7 +164,7 @@
 					<div class="tsd-signature tsd-kind-icon">XOHLC<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Arction/lcjs-analysis/blob/42a2a1d/src/datastructures.ts#L11">datastructures.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/Arction/lcjs-analysis/blob/43edc2c/src/datastructures.ts#L11">datastructures.ts:11</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -135,6 +184,134 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Functions</h2>
 				<section class="tsd-panel tsd-member tsd-kind-function">
+					<a name="bollingerbands" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> bollinger<wbr>Bands</h3>
+					<ul class="tsd-signatures tsd-kind-function">
+						<li class="tsd-signature tsd-kind-icon">bollinger<wbr>Bands<span class="tsd-signature-symbol">(</span>xohlcValues<span class="tsd-signature-symbol">: </span><a href="globals.html#xohlc" class="tsd-signature-type">XOHLC</a><span class="tsd-signature-symbol">[]</span>, averagingFrameLength<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="globals.html#areapoint" class="tsd-signature-type">AreaPoint</a><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Arction/lcjs-analysis/blob/43edc2c/src/trading.ts#L96">trading.ts:96</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Calculate bollinger bands values from XOHLC values.
+									Uses &quot;typical prices&quot; (average of close + low + high).</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>xohlcValues: <a href="globals.html#xohlc" class="tsd-signature-type">XOHLC</a><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Array of XOHLC values.</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5>averagingFrameLength: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Length of averaging frame.</p>
+										</div>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="globals.html#areapoint" class="tsd-signature-type">AreaPoint</a><span class="tsd-signature-symbol">[]</span></h4>
+							<p>Points of Bollinger bands (X + 2 Y values)</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function">
+					<a name="exponentialmovingaverage" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> exponential<wbr>Moving<wbr>Average</h3>
+					<ul class="tsd-signatures tsd-kind-function">
+						<li class="tsd-signature tsd-kind-icon">exponential<wbr>Moving<wbr>Average<span class="tsd-signature-symbol">(</span>xohlcValues<span class="tsd-signature-symbol">: </span><a href="globals.html#xohlc" class="tsd-signature-type">XOHLC</a><span class="tsd-signature-symbol">[]</span>, averagingFrameLength<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="globals.html#point" class="tsd-signature-type">Point</a><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Arction/lcjs-analysis/blob/43edc2c/src/trading.ts#L40">trading.ts:40</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Calculate EMA values from XOHLC &#39;close&#39; values.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>xohlcValues: <a href="globals.html#xohlc" class="tsd-signature-type">XOHLC</a><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Array of XOHLC values.</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5>averagingFrameLength: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Length of averaging frame.</p>
+										</div>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="globals.html#point" class="tsd-signature-type">Point</a><span class="tsd-signature-symbol">[]</span></h4>
+							<p>Array of EMA values.  Length of this array is equal to xohlcValues.length - averagingFrameLength + 1</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function">
+					<a name="relativestrengthindex" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> relative<wbr>Strength<wbr>Index</h3>
+					<ul class="tsd-signatures tsd-kind-function">
+						<li class="tsd-signature tsd-kind-icon">relative<wbr>Strength<wbr>Index<span class="tsd-signature-symbol">(</span>xohlcValues<span class="tsd-signature-symbol">: </span><a href="globals.html#xohlc" class="tsd-signature-type">XOHLC</a><span class="tsd-signature-symbol">[]</span>, averagingFrameLength<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="globals.html#point" class="tsd-signature-type">Point</a><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Arction/lcjs-analysis/blob/43edc2c/src/trading.ts#L130">trading.ts:130</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Calculate RSI values from XOHLC &#39;close&#39; values.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>xohlcValues: <a href="globals.html#xohlc" class="tsd-signature-type">XOHLC</a><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Array of XOHLC values.</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5>averagingFrameLength: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Length of averaging frame.</p>
+										</div>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="globals.html#point" class="tsd-signature-type">Point</a><span class="tsd-signature-symbol">[]</span></h4>
+							<p>Relative Strength Index values.
+							Length of this array is equal to xohlcValues.length - averagingFrameLength + 1</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function">
 					<a name="simplemovingaverage" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagConst">Const</span> simple<wbr>Moving<wbr>Average</h3>
 					<ul class="tsd-signatures tsd-kind-function">
@@ -144,7 +321,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Arction/lcjs-analysis/blob/42a2a1d/src/trading.ts#L10">trading.ts:10</a></li>
+									<li>Defined in <a href="https://github.com/Arction/lcjs-analysis/blob/43edc2c/src/trading.ts#L10">trading.ts:10</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -176,6 +353,40 @@
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function">
+					<a name="standarddeviation" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> standard<wbr>Deviation</h3>
+					<ul class="tsd-signatures tsd-kind-function">
+						<li class="tsd-signature tsd-kind-icon">standard<wbr>Deviation<span class="tsd-signature-symbol">(</span>values<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Arction/lcjs-analysis/blob/43edc2c/src/trading.ts#L73">trading.ts:73</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Calculate standard deviation for a set of values.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>values: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Array of values.</p>
+										</div>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+							<p>Standard deviation value.</p>
+						</li>
+					</ul>
+				</section>
 			</section>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -189,13 +400,28 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#areapoint" class="tsd-kind-icon">Area<wbr>Point</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#point" class="tsd-kind-icon">Point</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#xohlc" class="tsd-kind-icon">XOHLC</a>
 					</li>
 					<li class=" tsd-kind-function">
+						<a href="globals.html#bollingerbands" class="tsd-kind-icon">bollinger<wbr>Bands</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#exponentialmovingaverage" class="tsd-kind-icon">exponential<wbr>Moving<wbr>Average</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#relativestrengthindex" class="tsd-kind-icon">relative<wbr>Strength<wbr>Index</a>
+					</li>
+					<li class=" tsd-kind-function">
 						<a href="globals.html#simplemovingaverage" class="tsd-kind-icon">simple<wbr>Moving<wbr>Average</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#standarddeviation" class="tsd-kind-icon">standard<wbr>Deviation</a>
 					</li>
 				</ul>
 			</nav>
