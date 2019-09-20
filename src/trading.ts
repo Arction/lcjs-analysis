@@ -5,7 +5,7 @@ import { XOHLC, Point, AreaPoint } from 'datastructures'
  * Calculate SMA values from XOHLC 'close' values.
  * @param   xohlcValues             Array of XOHLC values.
  * @param   averagingFrameLength    Length of averaging frame.
- * @return                          Array of SMA values. Length of this array is 'averagingFrameLength' - 1 less than 'xohlcValues'
+ * @return                          Array of SMA values. Length of this array will be xohlcValues.length - averagingFrameLength + 1
  */
 export const simpleMovingAverage = ( xohlcValues: XOHLC[], averagingFrameLength: number ): Point[] => {
     const len = xohlcValues.length
@@ -124,13 +124,17 @@ export const bollingerBands = ( xohlcValues: XOHLC[], averagingFrameLength: numb
  * @param   xohlcValues             Array of XOHLC values.
  * @param   averagingFrameLength    Length of averaging frame.
  * @return                          Relative Strength Index values.
- *                                  Length of this array is equal to xohlcValues.length - averagingFrameLength + 1
+ *                                  Length of this array is equal to xohlcValues.length - averagingFrameLength
  */
 export const relativeStrengthIndex = ( xohlcValues: XOHLC[], averagingFrameLength: number ): Point[] => {
+    // Based on http://cns.bu.edu/~gsc/CN710/fincast/Technical%20_indicators/Relative%20Strength%20Index%20(RSI).htm
     const len = xohlcValues.length
+    if ( len < averagingFrameLength )
+        return []
+
     const result: Point[] = []
-    const upValues: number[] = []
-    const downValues: number[] = []
+    const gains: number[] = []
+    const losses: number[] = []
     let prevValue: number | undefined
     for ( let i = 0; i < len; i++ ) {
         // Use close value for RSI.
@@ -138,29 +142,41 @@ export const relativeStrengthIndex = ( xohlcValues: XOHLC[], averagingFrameLengt
         if ( prevValue !== undefined ) {
             const diff = value - prevValue
             if ( diff > 0 ) {
-                upValues[i] = diff
-                downValues[i] = 0
+                gains[i] = diff
+                losses[i] = 0
             } else {
-                downValues[i] = -diff   // Use positive value
-                upValues[i] = 0
+                losses[i] = -diff   // Use positive value
+                gains[i] = 0
             }
         }
         //don't put anything to up and dn first item. It's not used 
         prevValue = value
     }
-    for ( let i = averagingFrameLength - 1; i < len; i++ ) {
-        let avgUpSum = 0
-        let avgDownSum = 0
-        let count = 0
-        for ( let j = i; j > Math.max( i - averagingFrameLength, 0 ); j-- ) {
-            avgUpSum += upValues[j]
-            avgDownSum += downValues[j]
-            count++
-        }
-        const avgUp = avgUpSum / count
-        const avgDown = avgDownSum / count
-        const rsi = 100 - ( 100 / ( 1 + avgUp / avgDown ) )
-        result.push( { x: xohlcValues[i][0], y: rsi } )
+    // Add first RSI value.
+    const sum = ( prev: number, cur: number ) => prev + cur
+    let prevAvgGain = gains
+        .slice( 0, averagingFrameLength + 1 )
+        .reduce( sum, 0 )
+        / averagingFrameLength
+    let prevAvgLoss = losses
+        .slice( 0, averagingFrameLength + 1 )
+        .reduce( sum, 0 )
+        / averagingFrameLength
+    const firstRS = prevAvgGain / prevAvgLoss
+    const firstRSI = 100 - ( 100 / ( 1 + firstRS ) )
+    result.push( { x: xohlcValues[averagingFrameLength][0], y: firstRSI } )
+    // Add rest of RSI values as smoothed.
+    for ( let i = averagingFrameLength + 1; i < len; i++ ) {
+        const avgGain = ( prevAvgGain * ( averagingFrameLength - 1 ) + gains[i] ) / averagingFrameLength
+        const avgLoss = ( prevAvgLoss * ( averagingFrameLength - 1 ) + losses[i] ) / averagingFrameLength
+        const smoothedRS =
+            ( prevAvgGain * ( averagingFrameLength - 1 ) + gains[i] ) /
+            ( prevAvgLoss * ( averagingFrameLength - 1 ) + losses[i] )
+        const RSI = 100 - ( 100 / ( 1 + smoothedRS ) )
+        result.push( { x: xohlcValues[i][0], y: RSI } )
+
+        prevAvgGain = avgGain
+        prevAvgLoss = avgLoss
     }
     return result
 }
