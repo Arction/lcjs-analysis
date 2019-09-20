@@ -119,7 +119,6 @@ export const bollingerBands = ( xohlcValues: XOHLC[], averagingFrameLength: numb
     }
     return bollingerBands
 }
-
 /**
  * Calculate RSI values from XOHLC 'close' values.
  * @param   xohlcValues             Array of XOHLC values.

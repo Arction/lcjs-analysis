@@ -3,7 +3,6 @@
   "compilerOptions": {
     "declaration": true,
     "outDir": "dist",
-    "module": "ES2015",
     "target": "es5",
     "sourceMap": true,
     "forceConsistentCasingInFileNames": true,
