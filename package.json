@@ -4,7 +4,12 @@
   "description": "A data analysis library.",
   "keywords": [
     "lcjs",
-    "trading"
+    "trading",
+    "finance",
+    "investing",
+    "charting tools",
+    "technical analysis",
+    "technical indicators"
   ],
   "homepage": "https://github.com/Arction/lcjs-analysis#README",
   "bugs": {

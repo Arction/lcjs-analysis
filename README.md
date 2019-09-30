@@ -1,6 +1,7 @@
 # LCJS data analysis tools
 
-A collection of data analysis tools, designed to work directly with LightningChart<sup>&#174;</sup> JS charting library. [https://www.arction.com/](https://www.arction.com/)
+A collection of technical analysis tools for trading, finance, investing. Calculates Technical Indicators from data.
+Designed to work directly with LightningChart<sup>&#174;</sup> JS charting library. [https://www.arction.com/](https://www.arction.com/)
 
 ## Installation
 
